@@ -1,0 +1,17 @@
+digraph Tree
+{
+   rankdir = HR;
+   node[fontsize=14];
+   edge[color="black",fontcolor="blue",fontsize=12];
+   tree[shape = Mrecord, style = filled, filcolor = "red", label = "My Tree | size = 0"];
+   "0x106c01fc0"[shape = Mrecord, style = filled, fillcolor = "cornflowerblue",   label = " <value> /"];
+  "0x106c01fc0" -> "0x106c01f90" [color = "green"];
+  "0x106c01fc0" -> "0x106c01f00" [color = "red"];
+   "0x106c01f90"[shape = Mrecord, style = filled, fillcolor = "cornflowerblue",   label = " <value> *"];
+  "0x106c01f90" -> "0x106c01f60" [color = "green"];
+  "0x106c01f90" -> "0x106c01f30" [color = "red"];
+   "0x106c01f60"[shape = Mrecord, style = filled, fillcolor = "pink1",   label = " <value> 4.0"];
+   "0x106c01f30"[shape = Mrecord, style = filled, fillcolor = "pink1",   label = " <value> 3.0"];
+   "0x106c01f00"[shape = Mrecord, style = filled, fillcolor = "pink1",   label = " <value> 6.0"];
+   tree -> "0x106c01fc0" [color = "red"];
+}
