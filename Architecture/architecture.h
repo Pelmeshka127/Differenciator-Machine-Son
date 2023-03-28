@@ -9,6 +9,7 @@ enum Errors_Code {
     Incorrect_Node  = 4,
     Underflow       = 5,
     Overflow        = 6,
+    Incorrect_Type  = 7,
 };
 
 enum Operation_Types {
@@ -20,6 +21,10 @@ enum Operation_Types {
 };
 
 const int Operation = 0;
+
+const int Pre_Order  = 1;
+const int In_Order   = 2;
+const int Post_Order = 3;
 
 const int Max_Length = 40;
 

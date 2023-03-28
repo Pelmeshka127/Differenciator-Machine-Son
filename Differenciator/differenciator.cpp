@@ -15,7 +15,7 @@ double Eval(tree_node * const node)
 
     switch (node->type)
     {
-        #include "../cmd.h"
+        #include "../Architecture/cmd.h"
 
         default:
             fprintf(stderr, "Incorrect node type %d\n", node->type);

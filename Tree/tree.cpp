@@ -59,7 +59,7 @@ int Tree_Download(tree_s * const my_tree)
 {
     Text_Info onegin = {};
 
-    FILE * input_file  = fopen("newt.txt", "r");
+    FILE * input_file  = fopen("trees/newt.txt", "r");
     if (input_file == nullptr)
     {
         fprintf(stderr, "Failed reading file with source tree in function %s\n", __PRETTY_FUNCTION__);
@@ -78,7 +78,7 @@ int Tree_Download(tree_s * const my_tree)
         return File_Error;
     }
 
-    if (New_Tree_Reader(&onegin, my_tree, &my_tree->root) != No_Error)
+    if (Tree_Reader(&onegin, my_tree, &my_tree->root) != No_Error)
     {
         fprintf(stderr, "Reading of thr tree failed ion function %s\n", __PRETTY_FUNCTION__);
         return File_Error;
@@ -91,42 +91,9 @@ int Tree_Download(tree_s * const my_tree)
 
 //-------------------------------------------------------------------------------//
 
-int Tree_Reader(Text_Info * const onegin, tree_s * const my_tree, tree_node ** cur_node)
-{
-    assert(onegin);
-    assert(my_tree);
-
-    if (**onegin->pointers == '{')
-    {
-        while (**onegin->pointers != '\"')
-            (*onegin->pointers)++;
-        
-        char node_item[Max_Length] = "";
-
-        Tree_Make_Node_Item(node_item, *onegin->pointers);
-
-        //*cur_node = Tree_Insert_Node(my_tree, *cur_node, node_item);
-
-        while (**onegin->pointers != '{' && **onegin->pointers != '}')
-            (*onegin->pointers)++;
-
-        if (**onegin->pointers == '}')
-            return No_Error;
-
-        Tree_Reader(onegin, my_tree, &(*cur_node)->left);
-
-        while (**onegin->pointers != '{')
-            (*onegin->pointers)++;
-
-        Tree_Reader(onegin, my_tree, &(*cur_node)->right);
-    }
-
-    return No_Error;
-}
-
 //-------------------------------------------------------------------------------//
 
-int New_Tree_Reader(Text_Info * const onegin, tree_s * const my_tree, tree_node ** cur_node)
+int Tree_Reader(Text_Info * const onegin, tree_s * const my_tree, tree_node ** cur_node)
 {
     assert(onegin);
     assert(my_tree);
@@ -149,19 +116,18 @@ int New_Tree_Reader(Text_Info * const onegin, tree_s * const my_tree, tree_node 
         {
             sscanf(*onegin->pointers, "( %s )", node_operator);
             (*onegin->pointers)++;
-            printf("%s\n", node_operator);
-            printf("%d\n", strlen(node_operator));
+
             *cur_node = Tree_Insert_Node(Tree_Get_Number_By_Operator(node_operator), Operation, nullptr, nullptr);
 
             while (**onegin->pointers != '(')
                 (*onegin->pointers)++;
 
-            New_Tree_Reader(onegin, my_tree, &(*cur_node)->left);
+            Tree_Reader(onegin, my_tree, &(*cur_node)->left);
             
             while (**onegin->pointers != '(')
                 (*onegin->pointers)++;
 
-            New_Tree_Reader(onegin, my_tree, &(*cur_node)->right);
+            Tree_Reader(onegin, my_tree, &(*cur_node)->right);
 
             return No_Error;
         }
@@ -188,7 +154,7 @@ int Tree_Make_Node_Item(char * node_item, const char * line_start)
         return Incorrect_Node;
     }
 
-    strncpy(node_item, line_start, end_line - line_start);
+    strncpy(node_item, line_start, (size_t) (end_line - line_start));
 
     return No_Error;
 }
@@ -197,7 +163,6 @@ int Tree_Make_Node_Item(char * node_item, const char * line_start)
 
 int Tree_Get_Number_By_Operator(char * operation)
 {
-    printf("%c\n", *operation);
     if (*operation == '+')
         return Op_Add;
     else if (*operation == '-')
@@ -206,49 +171,151 @@ int Tree_Get_Number_By_Operator(char * operation)
         return Op_Mul;
     else if (*operation == '/')
         return Op_Div;
+
+    else
+    {
+        fprintf(stderr, "Incorrect symbol of operation %c\n", *operation);
+        return Incorrect_Type;
+    }
 }
 
 //-------------------------------------------------------------------------------//
 
-int Tree_Walk_In_Order(tree_node * const root)
+char Tree_Get_Operator_By_Number(type_t type)
 {
-    assert(root);
+    if (type == Op_Add)
+        return '+';
+    else if (type == Op_Sub)
+        return '-';
+    else if (type == Op_Mul)
+        return '*';
+    else if (type == Op_Div)
+        return '/';
+    
+    else
+    {
+        fprintf(stderr, "Incorrect number of operation %d\n", type);
+        return Incorrect_Type;
+    }
 
-    if (root->left != nullptr)
-        Tree_Walk_In_Order(root->left);    
+}
 
-    if (root->right != nullptr)
-        Tree_Walk_In_Order(root->right);
+//-------------------------------------------------------------------------------//
+
+int Tree_Printer(tree_node * cur_node, const int print_type)
+{   
+    const char * file_name = nullptr;
+    switch(print_type)
+    {
+        case Pre_Order:
+        file_name = "trees/pre_order_tree.txt";
+        break;
+
+        case In_Order:
+        file_name = "trees/in_order_tree.txt";
+        break;
+
+        case Post_Order:
+        file_name = "trees/post_order_tree.txt";
+        break;
+
+        default:
+        fprintf(stderr, "Incorrect type of tree print in function %s: %d\n", __PRETTY_FUNCTION__, print_type);
+        return File_Error;
+    }
+
+    FILE * dst_file = fopen(file_name, "w");
+    if (dst_file == nullptr)
+    {
+        fprintf(stderr, "Failed openning file with of tree printing in function %s\n", __PRETTY_FUNCTION__);
+        return File_Error;
+    }   
+
+    switch(print_type)
+    {
+        case Pre_Order:
+        Tree_Print_Pre_Order(cur_node, dst_file);
+        break;
+
+        case In_Order:
+        Tree_Print_In_Order(cur_node, dst_file);
+        break;
+
+        case Post_Order:
+        Tree_Print_Post_Order(cur_node, dst_file);
+        break;
+    }
+
+    return No_Error;
+}
+
+
+//-------------------------------------------------------------------------------//
+
+int Tree_Print_Pre_Order(tree_node * const cur_node, FILE * dst_file)
+{
+    if (cur_node == nullptr)
+        return No_Error;
+
+    fprintf(dst_file, " ( ");
+
+    if (cur_node->type == Num_Subject)
+        fprintf(dst_file, "%lg", cur_node->data);
+
+    else
+        fprintf(dst_file, "%c", Tree_Get_Operator_By_Number(cur_node->type));
+
+    Tree_Print_Pre_Order(cur_node->left, dst_file);
+    Tree_Print_Pre_Order(cur_node->right, dst_file);
+
+    fprintf(dst_file, " ) ");
+
+    return No_Error;
+}
+
+//-------------------------------------------------------------------------------//
+
+int Tree_Print_In_Order(tree_node * const cur_node, FILE * dst_file)
+{
+    if (cur_node == nullptr)
+        return No_Error;
+
+    fprintf(dst_file, " ( ");    
+
+    Tree_Print_In_Order(cur_node->left, dst_file);    
+
+    if (cur_node->type == Num_Subject)
+        fprintf(dst_file, "%lg", cur_node->data);
+
+    else
+        fprintf(dst_file, "%c", Tree_Get_Operator_By_Number(cur_node->type));
+
+    Tree_Print_In_Order(cur_node->right, dst_file);
+
+    fprintf(dst_file, " ) ");
     
     return No_Error;
 }
 
 //-------------------------------------------------------------------------------//
 
-int Tree_Walk_Pre_Order(tree_node * const root)
+int Tree_Print_Post_Order(tree_node * const cur_node, FILE * dst_file)
 {
-    assert(root);
-    
-    if (root->left != nullptr)
-        Tree_Walk_Pre_Order(root->left);
+    if (cur_node == nullptr)
+        return No_Error;
 
-    if (root->right != nullptr)
-        Tree_Walk_Pre_Order(root->right);
+    fprintf(dst_file, " ( ");
 
-    return No_Error;
-}
+    Tree_Print_Post_Order(cur_node->left, dst_file);
+    Tree_Print_Post_Order(cur_node->right, dst_file);
 
-//-------------------------------------------------------------------------------//
+    if (cur_node->type == Num_Subject)
+        fprintf(dst_file, "%lg", cur_node->data);
 
-int Tree_Walk_Post_Order(tree_node * const root)
-{
-    assert(root);
+    else
+        fprintf(dst_file, "%c", Tree_Get_Operator_By_Number(cur_node->type));
 
-    if (root->left != nullptr)
-        Tree_Walk_Post_Order(root->left);
-    
-    if (root->right != nullptr) 
-        Tree_Walk_Post_Order(root->right);
+    fprintf(dst_file, " ) ");
 
     return No_Error;
 }

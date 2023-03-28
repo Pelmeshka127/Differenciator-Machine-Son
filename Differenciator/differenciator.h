@@ -1,11 +1,13 @@
-#ifndef DIFFERENCIAOR_H_
+#ifndef DIFFERENCIATOR_H_
 #define DIFFERENCIATOR_H_
 
 #include "../Tree/tree.h"
 
 //-------------------------------------------------------------------------------//
 
-
+/// @brief 
+/// @param node 
+/// @return 
 double Eval(tree_node * const node);
 
 

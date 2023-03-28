@@ -1,7 +1,7 @@
 #ifndef TEXT_FUNCTIONS_H_
 #define TEXT_FUNCTIONS_H_
 
-#include "../architecture.h"
+#include "../Architecture/architecture.h"
 
 struct Text_Info {
     char * buffer;
