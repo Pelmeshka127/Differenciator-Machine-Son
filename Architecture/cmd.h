@@ -17,9 +17,9 @@ DEF_CMD(MUL, Op_Mul,
 
 DEF_CMD(DIV, Op_Div,
 {
-    double a = EVAL(LEFT);
-    double b = EVAL(RIGHT);
-    if (b == 0)
+    data_t a = EVAL(LEFT);
+    data_t b = EVAL(RIGHT);
+    if ((int) b == 0)
     {
         fprintf(stderr, "Division by zero in function %s\n", __PRETTY_FUNCTION__);
         return Incorrect_Node;

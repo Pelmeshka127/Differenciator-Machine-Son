@@ -10,20 +10,32 @@ enum Errors_Code {
     Underflow       = 5,
     Overflow        = 6,
     Incorrect_Type  = 7,
+    Incorrect_Var   = 8,
 };
 
+const int Num_Type = 1;
+
+const int Op_Type  = 2;
+
+const int Var_Type = 3;
+
 enum Operation_Types {
-    Num_Subject = 0,
     Op_Add      = 1,
     Op_Sub      = 2,
     Op_Mul      = 3,
     Op_Div      = 4,
 };
 
-const int Operation = 0;
+enum Var_Types {
+    Var_X   = 1,
+    Var_Y   = 2,
+    Var_Z   = 3,
+};
 
 const int Pre_Order  = 1;
+
 const int In_Order   = 2;
+
 const int Post_Order = 3;
 
 const int Max_Length = 40;

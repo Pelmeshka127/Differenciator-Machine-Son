@@ -14,25 +14,21 @@ int main(void)
 
     Tree_Get_Size(&my_tree, my_tree.root);
 
-    printf("%f\n", Eval(my_tree.root));
+    tree_s diff_tree = {};
 
-    Tree_Printer(my_tree.root, Pre_Order);
+    diff_tree.root = Diff(my_tree.root);
 
-    Tree_Printer(my_tree.root, In_Order);
-
-    Tree_Printer(my_tree.root, Post_Order);
+    Tree_Printer(diff_tree.root, Pre_Order);
 
     Tree_Dump(&my_tree);
+
+    Tree_Dump(&diff_tree);
+
+    Diff_Print_Equation(my_tree.root, diff_tree.root);
 
     Tree_Dtor(&my_tree);
 
     Close_Log_File();
-
-    /*char *s = "( o )4444";
-    char i[10] = "";
-
-    sscanf(s, "(%s)", i);
-    printf("%s\n", i);*/
 
     return 0;
 }

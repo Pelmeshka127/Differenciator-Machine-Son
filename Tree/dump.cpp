@@ -81,14 +81,15 @@ void Tree_Draw(tree_node * const root, FILE * graph_file)
 {
     assert(root);
 
-    char operation = ' ';
-
-    if ((operation = Tree_Get_Op(root)) != 0)
+    if (root->type == Op_Type)
         fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"cornflowerblue\","
-                            "   label = \" <value> %c\"];\n", root, operation);
-    else
+                            "   label = \" <value> %c\"];\n", root, Tree_Get_Operator_By_Number((int)root->data));
+    else if (root->type == Num_Type)
         fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"pink1\","
-                            "   label = \" <value> %.1f\"];\n", root, root->data);
+                            "   label = \" <value> %lg\"];\n", root, root->data);
+    else if (root->type == Var_Type)
+        fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"pink2\","
+                            "   label = \" <value> %c\"];\n", root, Tree_Get_Variable_By_Number((int)root->data));
     
     if (root->left != nullptr)
         fprintf(graph_file, "  \"%p\" -> \"%p\" [color = \"green\"];\n", root, root->left);
@@ -101,34 +102,6 @@ void Tree_Draw(tree_node * const root, FILE * graph_file)
 
     if (root->right != nullptr)
         Tree_Draw(root->right, graph_file);
-}
-
-//-------------------------------------------------------------------------------//
-
-char Tree_Get_Op(tree_node * const node)
-{
-    assert(node);
-
-    switch(node->type)
-    {
-        case Num_Subject:
-        return 0;
-
-        case Op_Add:
-        return '+';
-
-        case Op_Sub:
-        return '-';
-
-        case Op_Mul:
-        return '*';
-
-        case Op_Div:
-        return '/';
-
-        default:
-        return ' ';
-    }
 }
 
 //-------------------------------------------------------------------------------//

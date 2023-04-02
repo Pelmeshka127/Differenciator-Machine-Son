@@ -38,7 +38,7 @@ int Tree_Ctor(tree_s * const my_tree);
 /// @param inserting_node is ptr on the inserting node
 /// @param word is value of the node
 /// @return nullptr if there's error, inserting_node if it's ok
-tree_node * Tree_Insert_Node(type_t type, data_t data, tree_node * left, tree_node * right);
+tree_node * Tree_New_Node(type_t type, data_t data, tree_node * left = nullptr, tree_node * right = nullptr);
 
 //-------------------------------------------------------------------------------//
 
@@ -65,25 +65,31 @@ int Tree_Reader(Text_Info * const onegin, tree_s * const my_tree, tree_node ** c
 
 //-------------------------------------------------------------------------------//
 
-/// @brief Function finds out the operator by it's type
-/// @param operation is 
-/// @return 
+/// @brief Function finds out the operation code by it's symbol
+/// @param operation is ptr the operaton symbol
+/// @return code of the operation
 int Tree_Get_Number_By_Operator(char * operation);    
 
 //-------------------------------------------------------------------------------//
 
-/// @brief 
-/// @param type 
-/// @return 
-char Tree_Get_Operator_By_Number(type_t type);
+/// @brief Function finds out the symbol of the operation by it's code
+/// @param operation is code of the opearation
+/// @return the symbol of the operation
+char Tree_Get_Operator_By_Number(int operation);
 
 //-------------------------------------------------------------------------------//
 
 /// @brief 
-/// @param node_item 
-/// @param line_start 
+/// @param variable 
 /// @return 
-int Tree_Make_Node_Item(char * node_item, const char * line_start);
+int Tree_Get_Number_By_Variable(char * variable);
+
+//-------------------------------------------------------------------------------//
+
+/// @brief 
+/// @param variable 
+/// @return 
+char Tree_Get_Variable_By_Number(int variable);
 
 //-------------------------------------------------------------------------------//
 
