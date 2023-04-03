@@ -3,19 +3,7 @@ digraph Tree
    rankdir = HR;
    node[fontsize=14];
    edge[color="black",fontcolor="blue",fontsize=12];
-   tree[shape = Mrecord, style = filled, filcolor = "red", label = "My Tree | size = 0"];
-   "0x105201e10"[shape = Mrecord, style = filled, fillcolor = "cornflowerblue",   label = " <value> +"];
-  "0x105201e10" -> "0x105201ed0" [color = "green"];
-  "0x105201e10" -> "0x105201e40" [color = "red"];
-   "0x105201ed0"[shape = Mrecord, style = filled, fillcolor = "cornflowerblue",   label = " <value> *"];
-  "0x105201ed0" -> "0x105201f30" [color = "green"];
-  "0x105201ed0" -> "0x105201f00" [color = "red"];
-   "0x105201f30"[shape = Mrecord, style = filled, fillcolor = "pink1",   label = " <value> 0"];
-   "0x105201f00"[shape = Mrecord, style = filled, fillcolor = "pink2",   label = " <value> x"];
-   "0x105201e40"[shape = Mrecord, style = filled, fillcolor = "cornflowerblue",   label = " <value> *"];
-  "0x105201e40" -> "0x105201ea0" [color = "green"];
-  "0x105201e40" -> "0x105201e70" [color = "red"];
-   "0x105201ea0"[shape = Mrecord, style = filled, fillcolor = "pink1",   label = " <value> 4"];
-   "0x105201e70"[shape = Mrecord, style = filled, fillcolor = "pink1",   label = " <value> 1"];
-   tree -> "0x105201e10" [color = "red"];
+   tree[shape = Mrecord, style = filled, filcolor = "red", label = "My Tree | size = 1"];
+   "0x104601e10"[shape = Mrecord, style = filled, fillcolor = "pink1",   label = " <value> 6"];
+   tree -> "0x104601e10" [color = "red"];
 }

@@ -17,7 +17,7 @@ data_t Eval(tree_node * const cur_node);
 /// @brief 
 /// @param node 
 /// @return 
-tree_node * Diff(tree_node * const cur_node);
+tree_node * Diff(tree_s * const my_tree, tree_node * const cur_node);
 
 //-------------------------------------------------------------------------------//
 
@@ -33,6 +33,15 @@ tree_node * Copy_Node(tree_node * const cur_node);
 /// @param diff_root 
 /// @return 
 int Diff_Print_Equation(tree_node * src_root, tree_node * diff_root);
+
+//-------------------------------------------------------------------------------//
+
+
+int Diff_Simplifier(tree_node * const cur_node);
+
+//-------------------------------------------------------------------------------//
+
+//-------------------------------------------------------------------------------//
 
 //-------------------------------------------------------------------------------//
 

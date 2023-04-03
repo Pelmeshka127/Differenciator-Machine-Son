@@ -26,30 +26,34 @@ data_t Eval(tree_node * const cur_node)
 
 //-------------------------------------------------------------------------------//
 
-tree_node * Diff(tree_node * const cur_node)
+tree_node * Diff(tree_s * const my_tree, tree_node * const NODE)
 {
-    switch(cur_node->type)
+    switch(NODE->type)
     {
         case Num_Type:
         return New_Num(0);
 
         case Op_Type:
-        switch((int) cur_node->data)
+        switch((int) NODE->data)
         {
             case Op_Add:
-            return New_Op(Op_Add, dL, dR);
+            return ADD(dL, dR);
 
             case Op_Sub:
-            return New_Op(Op_Sub, dL, dR);
+            return SUB(dL, dR);
 
             case Op_Mul:
-            return New_Op(Op_Add, New_Op(Op_Mul, dL, cR), New_Op(Op_Mul, cL, dR));
+            return ADD(MUL(dL, cR), MUL(cL, dR));
 
             case Op_Div:
-            return New_Op(Op_Div, New_Op(Op_Sub, New_Op(Op_Mul, dL, cR), New_Op(Op_Mul, cL, dR)), New_Op(Op_Mul, cL, cR));
+            return DIV(SUB(MUL(dL, cR), MUL(cL, dR)), MUL(cL, cR));
+
+            case Op_Pow:
+            if (cur_node->right->type == Num_Type)
+                return MUL(cR, POW(cL, SUB(cR, New_Num(1))));
 
             default:
-                fprintf(stderr, "Incorrect type of operation %d, in %s", (int) cur_node->data, __PRETTY_FUNCTION__);
+                fprintf(stderr, "Incorrect type of operation %d, in %s", (int) NODE->data, __PRETTY_FUNCTION__);
                 return nullptr;
         }
 
@@ -57,7 +61,7 @@ tree_node * Diff(tree_node * const cur_node)
         return New_Num(1);
 
         default:
-            fprintf(stderr, "Incorrect type %d, in %s", (int) cur_node->data, __PRETTY_FUNCTION__);
+            fprintf(stderr, "Incorrect type %d, in %s", (int) NODE->data, __PRETTY_FUNCTION__);
             return nullptr;
     }
 }
@@ -102,6 +106,181 @@ int Diff_Print_Equation(tree_node * src_root, tree_node * diff_root)
     Tree_Print_In_Order(diff_root, diff_file);
 
     fclose(diff_file);
+
+    return No_Error;
+}
+
+//-------------------------------------------------------------------------------//
+
+int Diff_Simplifier(tree_node * const NODE)
+{
+    if (LEFT == nullptr && RIGHT == nullptr)
+        return No_Error;
+
+    if (NODE->type == Op_Type && LEFT->type == Num_Type && RIGHT->type == Num_Type)
+    {
+        data_t node_value = Eval(NODE);
+
+        Tree_Clean(&LEFT);
+        Tree_Clean(&RIGHT);
+        
+        NODE->data = node_value;
+        NODE->type = Num_Type;
+
+        return No_Error;
+    }
+
+    else if (NODE->type == Op_Type && (int) NODE->data == Op_Pow)
+    {
+        if (LEFT->type == Var_Type)
+        {
+            NODE->data = LEFT->data;
+            NODE->type = LEFT->type;
+
+            Tree_Clean(&LEFT);
+            Tree_Clean(&RIGHT);
+
+            return No_Error;
+        }
+
+        else if (RIGHT->type == Var_Type)
+        {
+            NODE->type = RIGHT->type;
+            NODE->data = RIGHT->data;
+
+            Tree_Clean(&LEFT);
+            Tree_Clean(&RIGHT);
+
+            return No_Error;
+        }
+
+        else
+            return No_Error;
+    }
+
+    else if (NODE->type == Op_Type && (int) LEFT->data == 0)
+    {
+        switch((int) NODE->data)
+        {
+            case Op_Add:
+            
+                NODE->type = RIGHT->type;
+                NODE->data = RIGHT->data;
+                
+                Tree_Clean(&LEFT);
+                Tree_Clean(&RIGHT);
+                
+                break;
+
+            case Op_Sub:
+
+                NODE->type = RIGHT->type;
+                NODE->data = RIGHT->data;
+
+                Tree_Clean(&LEFT);
+                Tree_Clean(&RIGHT);
+
+                break;
+
+            case Op_Mul:
+
+                NODE->type = Num_Type;
+                NODE->data = 0;
+
+                Tree_Clean(&LEFT);
+                Tree_Clean(&RIGHT);
+
+                break;
+
+            case Op_Div:
+
+                NODE->type = Num_Type;
+                NODE->data = 0;
+
+                Tree_Clean(&LEFT);
+                Tree_Clean(&RIGHT);
+
+                break;
+
+            case Op_Pow:
+
+                NODE->type = Num_Type;
+                NODE->data = 1;
+
+                Tree_Clean(&LEFT);
+                Tree_Clean(&RIGHT);
+
+                break;
+
+            default:
+                printf("Will be soon...\n");
+        }
+
+        return No_Error;
+
+    }
+
+    else if (NODE->type == Op_Type && (int) RIGHT->data == 0)
+    {
+        switch((int) NODE->data)
+        {
+                case Op_Add:
+            
+                NODE->type = LEFT->type;
+                NODE->data = LEFT->data;
+                
+                Tree_Clean(&LEFT);
+                Tree_Clean(&RIGHT);
+                
+                break;
+
+            case Op_Sub:
+
+                NODE->type = LEFT->type;
+                NODE->data = LEFT->data;
+
+                Tree_Clean(&LEFT);
+                Tree_Clean(&RIGHT);
+
+                break;
+
+            case Op_Mul:
+
+                NODE->type = Num_Type;
+                NODE->data = 0;
+
+                Tree_Clean(&LEFT);
+                Tree_Clean(&RIGHT);
+
+                break;
+
+            case Op_Div:
+                fprintf(stderr, "Oguzok, division by 0\n");
+                break;
+
+            case Op_Pow:
+
+                NODE->type = Num_Type;
+                NODE->data = 1;
+
+                Tree_Clean(&LEFT);
+                Tree_Clean(&RIGHT);
+
+                break;
+
+            default:
+                printf("Will be soon...\n");
+        }
+
+        return No_Error;
+
+    }
+
+    else
+    {
+        Diff_Simplifier(LEFT);
+        Diff_Simplifier(RIGHT);
+    }
 
     return No_Error;
 }

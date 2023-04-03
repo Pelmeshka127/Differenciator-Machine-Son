@@ -125,7 +125,7 @@ int Tree_Print_Post_Order(tree_node * const cur_node, FILE * dst_file);
 /// @brief Fuction cleans all of the nodes
 /// @param root is ptr on the root of the tree
 /// @return No_Error
-int Tree_Clean(tree_node * const root);
+int Tree_Clean(tree_node ** root);
 
 //-------------------------------------------------------------------------------//
 

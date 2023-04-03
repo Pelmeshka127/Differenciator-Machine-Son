@@ -46,6 +46,8 @@ int Tree_Dump(tree_s * const my_tree)
         return File_Error;
     }
 
+    Tree_Get_Size(my_tree, my_tree->root);
+
     fprintf(graph_file, "digraph Tree\n{\n");
     fprintf(graph_file, "   rankdir = HR;\n");
     fprintf(graph_file, "   node[fontsize=14];\n   edge[color=\"black\",fontcolor=\"blue\",fontsize=12];\n");

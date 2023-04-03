@@ -24,6 +24,7 @@ enum Operation_Types {
     Op_Sub      = 2,
     Op_Mul      = 3,
     Op_Div      = 4,
+    Op_Pow      = 5,
 };
 
 enum Var_Types {

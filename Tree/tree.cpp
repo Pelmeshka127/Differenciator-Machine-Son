@@ -43,6 +43,9 @@ int Tree_Get_Size(tree_s * const my_tree, tree_node * const node)
     if (my_tree->root == nullptr)
         return 0;
 
+    if (node == my_tree->root)
+        my_tree->size = 0;
+
     my_tree->size++;
 
     if (node->left)
@@ -173,6 +176,8 @@ int Tree_Get_Number_By_Operator(char * operation)
         return Op_Mul;
     else if (*operation == '/')
         return Op_Div;
+    else if (*operation == '^')
+        return Op_Pow;
 
     else
         return Incorrect_Type;
@@ -190,6 +195,8 @@ char Tree_Get_Operator_By_Number(int operation)
         return '*';
     else if (operation == Op_Div)
         return '/';
+    else if (operation == Op_Pow)
+        return '^';
 
     else
         return Incorrect_Type;
@@ -364,15 +371,19 @@ int Tree_Print_Post_Order(tree_node * const cur_node, FILE * dst_file)
 
 //-------------------------------------------------------------------------------//
 
-int Tree_Clean(tree_node * const root)
+int Tree_Clean(tree_node ** root)
 {
     assert(root);
 
-    if (root->left != nullptr)
-        Tree_Clean(root->left);
+    if ((*root)->left != nullptr)
+        Tree_Clean(&(*root)->left);
 
-    if (root->right != nullptr)
-        Tree_Clean(root->right);
+    if ((*root)->right != nullptr)
+        Tree_Clean(&(*root)->right);
+
+    free(*root);
+
+    *root = nullptr;
 
     return No_Error;
 }
@@ -383,7 +394,7 @@ int Tree_Dtor(tree_s * const my_tree)
 {
     assert(my_tree);
 
-    Tree_Clean(my_tree->root);
+    Tree_Clean(&my_tree->root);
 
     my_tree->root = nullptr;
 

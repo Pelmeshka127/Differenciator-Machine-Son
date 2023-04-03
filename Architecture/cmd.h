@@ -26,3 +26,19 @@ DEF_CMD(DIV, Op_Div,
     }
     return a / b;
 })
+
+DEF_CMD(POW, Op_Pow,
+{
+    data_t a = EVAL(LEFT);
+    data_t b = EVAL(RIGHT);
+    if ((int) a == 0)
+        return 0;
+    else if ((int) a == 0)
+        return 1;
+    else
+    {
+        for (int i = 1; i < (int) b; i++)
+            a *= a;
+        return a;
+    }
+})
