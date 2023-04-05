@@ -75,7 +75,7 @@ int Tree_Get_Number_By_Operator(char * operation);
 /// @brief Function finds out the symbol of the operation by it's code
 /// @param operation is code of the opearation
 /// @return the symbol of the operation
-char Tree_Get_Operator_By_Number(int operation);
+int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long len);
 
 //-------------------------------------------------------------------------------//
 

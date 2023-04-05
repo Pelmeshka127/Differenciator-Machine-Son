@@ -3,7 +3,7 @@
 
 typedef int type_t;
 
-typedef double data_t;
+typedef int data_t;
 
 const int Max_Size = 30;
 

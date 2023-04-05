@@ -11,20 +11,28 @@
 /// @return 
 data_t Eval(tree_node * const cur_node);
 
+//-------------------------------------------------------------------------------//
+
+/// @brief 
+/// @param diff_tree 
+/// @param src_root 
+/// @return 
+tree_node * Diff(tree_s * const diff_tree, tree_node * const src_root);
 
 //-------------------------------------------------------------------------------//
 
 /// @brief 
-/// @param node 
+/// @param my_tree 
+/// @param cur_node 
 /// @return 
-tree_node * Diff(tree_s * const my_tree, tree_node * const cur_node);
+tree_node * Diff_Calc(tree_s * const my_tree, tree_node * const cur_node);
 
 //-------------------------------------------------------------------------------//
 
 /// @brief 
 /// @param cur_node 
 /// @return 
-tree_node * Copy_Node(tree_node * const cur_node);
+tree_node * Diff_Copy_Node(tree_node * cur_node);
 
 //-------------------------------------------------------------------------------//
 
@@ -41,8 +49,5 @@ int Diff_Simplifier(tree_node * const cur_node);
 
 //-------------------------------------------------------------------------------//
 
-//-------------------------------------------------------------------------------//
-
-//-------------------------------------------------------------------------------//
 
 #endif

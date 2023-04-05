@@ -84,14 +84,19 @@ void Tree_Draw(tree_node * const root, FILE * graph_file)
     assert(root);
 
     if (root->type == Op_Type)
+    {
+        char oper_symbol[Oper_Len] = "";
+        Tree_Get_Operator_By_Number(root->data, oper_symbol, Oper_Len);
         fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"cornflowerblue\","
-                            "   label = \" <value> %c\"];\n", root, Tree_Get_Operator_By_Number((int)root->data));
+                            "   label = \" <value> %s\"];\n", root, oper_symbol);
+    }
+
     else if (root->type == Num_Type)
         fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"pink1\","
-                            "   label = \" <value> %lg\"];\n", root, root->data);
+                            "   label = \" <value> %d\"];\n", root, root->data);
     else if (root->type == Var_Type)
-        fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"pink2\","
-                            "   label = \" <value> %c\"];\n", root, Tree_Get_Variable_By_Number((int)root->data));
+        fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"yellow\","
+                            "   label = \" <value> %c\"];\n", root, Tree_Get_Variable_By_Number(root->data));
     
     if (root->left != nullptr)
         fprintf(graph_file, "  \"%p\" -> \"%p\" [color = \"green\"];\n", root, root->left);

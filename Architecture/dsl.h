@@ -8,16 +8,16 @@
     Eval(node)
 
 #define dL  \
-    Diff(my_tree, LEFT)
+    Diff_Calc(my_tree, LEFT)
 
 #define dR  \
-    Diff(my_tree, RIGHT)
+    Diff_Calc(my_tree, RIGHT)
 
 #define cL  \
-    Copy_Node(LEFT)
+    Diff_Copy_Node(LEFT)
 
 #define cR  \
-    Copy_Node(RIGHT)
+    Diff_Copy_Node(RIGHT)
 
 #define ADD(left, right) \
     Tree_New_Node(Op_Type, Op_Add, left, right)
@@ -34,11 +34,17 @@
 #define POW(left, right) \
     Tree_New_Node(Op_Type, Op_Pow, left, right)
 
+#define SIN(left)   \
+    Tree_New_Node(Op_Type, Op_Sin, left, nullptr)
+
+#define COS(left)   \
+    Tree_New_Node(Op_Type, Op_Cos, left, nullptr)
+
+#define LN(left)    \
+    Tree_New_Node(Op_Type, Op_Ln, left, nullptr)
+
 #define New_Num(data) \
     Tree_New_Node(Num_Type, data)
-
-#define New_Op(data, left, right)   \
-    Tree_New_Node(Op_Type, data, left, right)
 
 #define New_Var(data)  \
     Tree_New_Node(Var_Type, data)
