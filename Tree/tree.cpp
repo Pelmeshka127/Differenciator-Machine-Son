@@ -63,7 +63,7 @@ int Tree_Download(tree_s * const my_tree)
 {
     Text_Info onegin = {};
 
-    FILE * input_file  = fopen("trees/3.txt", "r");
+    FILE * input_file  = fopen("trees/2.txt", "r");
     if (input_file == nullptr)
     {
         fprintf(stderr, "Failed reading file with source tree in function %s\n", __PRETTY_FUNCTION__);
@@ -136,7 +136,7 @@ int Tree_Reader(Text_Info * const onegin, tree_s * const my_tree, tree_node ** c
                     Tree_Reader(onegin, my_tree, &(*cur_node)->right);
                 }
 
-                else if (node_value >= Op_Cos)
+                else if (node_value >= Op_Sin)
                     (*cur_node)->right = nullptr;
 
                return No_Error;
@@ -402,6 +402,36 @@ int Tree_Print_Post_Order(tree_node * const cur_node, FILE * dst_file)
 }
 
 //-------------------------------------------------------------------------------//
+
+int Tree_Find_Variable_Node(tree_node * const cur_node)
+{
+    if (cur_node->type == Var_Type)
+        return Var_Type;
+
+    return No_Error;
+}
+
+//-------------------------------------------------------------------------------//
+
+int Tree_Is_There_Variables(tree_node * const cur_node)
+{
+    if (cur_node->left == nullptr && cur_node->right == nullptr)
+        return No_Error;
+    
+    if (Tree_Find_Variable_Node(cur_node))
+        return Var_Type;
+    
+    if (cur_node->left)
+        Tree_Is_There_Variables(cur_node->left);
+
+    if (cur_node->right)
+        Tree_Is_There_Variables(cur_node->right);
+
+    return Var_Type;
+}
+
+//-------------------------------------------------------------------------------//
+
 
 int Tree_Clean(tree_node ** root)
 {

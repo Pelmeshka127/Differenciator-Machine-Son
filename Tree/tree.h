@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "treeconfig.h"
 #include "../Parsering/parser.h"
@@ -119,6 +120,20 @@ int Tree_Print_Pre_Order(tree_node * const cur_node, FILE * dst_file);
 /// @param cur_node 
 /// @return 
 int Tree_Print_Post_Order(tree_node * const cur_node, FILE * dst_file);
+
+//-------------------------------------------------------------------------------//
+
+/// @brief 
+/// @param cur_node 
+/// @return 
+int Tree_Find_Variable_Node(tree_node * const cur_node);
+
+//-------------------------------------------------------------------------------//
+
+/// @brief 
+/// @param cur_node 
+/// @return 
+int Tree_Is_There_Variables(tree_node * const cur_node);
 
 //-------------------------------------------------------------------------------//
 

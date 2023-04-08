@@ -31,11 +31,6 @@ void Tree_Draw(tree_node * const node, FILE * graph_file);
 
 //-------------------------------------------------------------------------------//
 
-/// @brief 
-/// @param node 
-/// @return 
-char Tree_Get_Op(tree_node * const node);
-
-//-------------------------------------------------------------------------------//
+void Tree_Dump_To_Tex(tree_s * const my_tree, char * png_name);
 
 #endif

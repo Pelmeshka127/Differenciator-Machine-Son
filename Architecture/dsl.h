@@ -1,3 +1,5 @@
+#include <math.h>
+
 #define NODE cur_node
 
 #define LEFT cur_node->left

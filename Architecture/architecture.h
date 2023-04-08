@@ -12,6 +12,7 @@ enum Errors_Code {
     Incorrect_Type  = 20,
     Incorrect_Var   = 21,
     Empty_Node      = 9,
+    Incorrect_Mode  = 7,
 };
 
 const int Num_Type = 1;
@@ -35,6 +36,15 @@ enum Var_Types {
     Var_X   = 1,
     Var_Y   = 2,
     Var_Z   = 3,
+};
+
+enum Programm_Mode {
+    Show_Tree = 1,
+    Find_Func_Value_At_Point = 2,
+    Get_Diff = 3,
+    Find_Diff_Value_At_Point = 4,
+    Show_Diff_Tree = 5,
+    Finish_Prog = 10,
 };
 
 const int Pre_Order  = 1;

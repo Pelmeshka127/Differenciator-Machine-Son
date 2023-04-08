@@ -65,7 +65,7 @@ int Tree_Dump(tree_s * const my_tree)
 
     char call_graph[100] = " ";
 
-    sprintf(call_graph, "dot graphics/graph.dot -Tpng -o graphics/gpaph%d.png", graph_num++);
+    sprintf(call_graph, "dot graphics/graph.dot -Tpng -o graphics/graph%d.png", graph_num++);
     
     system(call_graph);
 
@@ -112,3 +112,10 @@ void Tree_Draw(tree_node * const root, FILE * graph_file)
 }
 
 //-------------------------------------------------------------------------------//
+
+void Tree_Dump_To_Tex(tree_s * const my_tree, char * png_name)
+{
+    Tree_Dump(my_tree);
+
+    sprintf(png_name, "graphics/graph%d.png", graph_num - 1);
+}

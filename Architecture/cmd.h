@@ -22,6 +22,7 @@ DEF_CMD(DIV, Op_Div,
     if ((int) b == 0)
     {
         fprintf(stderr, "Division by zero in function %s\n", __PRETTY_FUNCTION__);
+        fprintf(stderr, "The value of the tree is incorrect\n");
         return Incorrect_Node;
     }
     return a / b;
@@ -31,14 +32,36 @@ DEF_CMD(POW, Op_Pow,
 {
     data_t a = EVAL(LEFT);
     data_t b = EVAL(RIGHT);
+    data_t Muller = a;
     if ((int) a == 0)
         return 0;
-    else if ((int) a == 0)
+    else if ((int) a == 1)
         return 1;
     else
     {
         for (int i = 1; i < (int) b; i++)
-            a *= a;
+            a *= Muller;
         return a;
     }
+})
+
+DEF_CMD(SIN, Op_Sin,
+{
+    return (int) sin(LEFT->data);
+})
+
+DEF_CMD(COS, Op_Cos,
+{
+    return (int) cos(LEFT->data);
+})
+
+DEF_CMD(LN, Op_Ln,
+{
+    if (LEFT->data <= 0)
+    {
+        fprintf(stderr, "Incorrect argument in ln: %d\n", LEFT->data);
+        fprintf(stderr, "The value of the tree is incorrect\n");
+        return Incorrect_Node;
+    }
+    return (int) log(LEFT->data);
 })
