@@ -56,7 +56,7 @@ int Diff_Print_Equation(tree_node * src_root, tree_node * diff_root);
 /// @brief 
 /// @param cur_node 
 /// @return 
-int Diff_Simplifier(tree_node * const cur_node);
+int Diff_Simplifier(tree_node * const cur_node, int *simplified_flag);
 
 //-------------------------------------------------------------------------------//
 
@@ -65,7 +65,7 @@ int Diff_Simplifier(tree_node * const cur_node);
 /// @param cur_node 
 /// @param value 
 /// @return 
-int Find_Function_At_Point(tree_s * const my_tree, tree_node * cur_node, int value);
+int Find_Function_At_Point(tree_node * cur_node, int value);
 
 //-------------------------------------------------------------------------------//
 

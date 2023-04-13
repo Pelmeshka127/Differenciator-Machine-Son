@@ -39,12 +39,13 @@ enum Var_Types {
 };
 
 enum Programm_Mode {
-    Show_Tree = 1,
-    Find_Func_Value_At_Point = 2,
-    Get_Diff = 3,
-    Find_Diff_Value_At_Point = 4,
-    Show_Diff_Tree = 5,
-    Finish_Prog = 10,
+    Show_Tree                   = 1,
+    Find_Func_Value_At_Point    = 2,
+    Get_Diff                    = 3,
+    Find_Diff_Value_At_Point    = 4,
+    Show_Diff_Tree              = 5,
+    Maclaurin                   = 6,
+    Finish_Prog                 = 10,
 };
 
 const int Pre_Order  = 1;

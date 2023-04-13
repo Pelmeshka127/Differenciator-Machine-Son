@@ -3,6 +3,11 @@
 //-------------------------------------------------------------------------------//
 
 /// @brief 
+static void Introduction();
+
+//-------------------------------------------------------------------------------//
+
+/// @brief 
 /// @param cur_node 
 /// @return 
 static tree_node * Not_Zero_Node(tree_node * const cur_node);
@@ -20,11 +25,16 @@ int Start_Programm(tree_s * const my_tree)
 {
     assert(my_tree);
 
+    tree_s diff_tree = {};
+
+    Tree_Ctor(&diff_tree);
+
+    diff_tree.root = Diff_Calc(&diff_tree, my_tree->root);
+
     Tex_Start_File();    
 
-    Speaker("Hi, guys!\nEnter 1 to check the tree.\n"
-            "Enter 2 to find value of the function at the point.\n"
-            "Enter 10 to live the programm\n");
+    Introduction();
+
     int interactive = true;
     while (interactive)
     {
@@ -34,32 +44,54 @@ int Start_Programm(tree_s * const my_tree)
             switch (mode)
             {
                 case Show_Tree:
-                    Tex_Programm_Mode(my_tree, Show_Tree);
-                    Speaker("pam pam pi dam, done, now you can watch the tree of your grpahic\n");
+                    Tex_Programm_Mode(my_tree, &diff_tree, Show_Tree);
+                    printf("pam pam pi dam, done, now you can watch the tree of your grpahic\n");
                     break;
 
                 case Find_Func_Value_At_Point:
-                    Tex_Programm_Mode(my_tree, Find_Func_Value_At_Point);
-                    Speaker("Oh my God, i'm cumming... Yes you get your value\n");
+                    Tex_Programm_Mode(my_tree, &diff_tree, Find_Func_Value_At_Point);
+                    printf("Oh my God, i'm cumming... Yes you get your value\n");
+                    break;
+
+                case Get_Diff:
+                    printf("Oh shit, Derivatives, here we go again\n");
+                    Tex_Programm_Mode(my_tree, &diff_tree, Get_Diff);
+                    break;
+
+                case Find_Diff_Value_At_Point:
+                    Tex_Programm_Mode(my_tree, &diff_tree, Find_Diff_Value_At_Point);
+                    printf("Calculations for derivatives are soooo big.. I finished)\n");
+                    break;
+
+                case Show_Diff_Tree:
+                    Tex_Programm_Mode(my_tree, &diff_tree, Show_Diff_Tree);
+                    printf("pam pam, done, you can watch your diff tree\n");
+                    break;
+
+                case Maclaurin:
+                    Tex_Programm_Mode(my_tree, &diff_tree, Maclaurin);
+                    printf("got ya, have a nice cock and Maclaurin formula\n");
                     break;
 
                 case Finish_Prog:
                     interactive = false;
                     break;
-
+                    
                 default:
                     Skip_Line();
-                    Speaker("Incorrect command. Try one more time\n");
+                    printf("Incorrect command. Try one more time\n");
             }
         }
         else
         {
             Skip_Line();
-            Speaker("Incorrect command. Try one more time\n"); 
+            printf("Incorrect command. Try one more time\n"); 
         }
     }
 
     Tex_End_File();
+
+    Tree_Dtor(&diff_tree);
 
     return No_Error;
 }
@@ -99,23 +131,21 @@ tree_node * Diff(tree_s * const diff_tree, tree_node * src_root)
 
     int is_simplified = 0;
 
-    Tree_Dump(diff_tree);
+    //Tree_Dump(diff_tree);
 
     do {
         is_simplified = 0;
 
-        int old_size = Tree_Get_Size(diff_tree, diff_tree->root);
+        //Tree_Dump(diff_tree);
 
-        Diff_Simplifier(diff_tree->root);
+        Diff_Simplifier(diff_tree->root, &is_simplified);
 
-        int new_size = Tree_Get_Size(diff_tree, diff_tree->root);
-
-        if (new_size != old_size)
-            is_simplified += 1;
+        if (!is_simplified)
+            break;
 
     } while (is_simplified);
 
-    Tree_Dump(diff_tree);
+    //Tree_Dump(diff_tree);
 
     return diff_tree->root;
 }
@@ -142,13 +172,13 @@ tree_node * Diff_Calc(tree_s * const my_tree, tree_node * const NODE)
             return ADD(MUL(dL, cR), MUL(cL, dR));
 
             case Op_Div:
-            return DIV(SUB(MUL(dL, cR), MUL(cL, dR)), MUL(cL, cR));
+            return DIV(SUB(MUL(dL, cR), MUL(cL, dR)), MUL(cR, cR));
 
             case Op_Pow:
-            if (RIGHT->type == Num_Type && LEFT->type == Var_Type)
-                return MUL(cR, POW(cL, SUB(cR, New_Num(1))));
-            else if (RIGHT->type == Num_Type && LEFT->type == Num_Type)
-                return New_Num(0);
+            //if (RIGHT->type != Var_Type && LEFT->type == Var_Type)
+            return MUL(MUL(cR, POW(cL, SUB(cR, New_Num(1)))), dL);
+            // else if (RIGHT->type == Num_Type && LEFT->type == Num_Type)
+            //     return New_Num(0);
             
             case Op_Sin:
             return MUL(dL, COS(cL));
@@ -222,13 +252,14 @@ int Diff_Print_Equation(tree_node * src_root, tree_node * diff_root)
 
 //-------------------------------------------------------------------------------//
 
-int Diff_Simplifier(tree_node * NODE)
+int Diff_Simplifier(tree_node * NODE, int *simplified_flag)
 {
     if (LEFT == nullptr || RIGHT == nullptr)
         return No_Error;
 
     if (NODE->type == Op_Type && LEFT->type == Num_Type && RIGHT->type == Num_Type)
     {
+        //printf("Yes\n");
         data_t node_value = Eval(NODE);
         
         NODE->data = node_value;
@@ -236,6 +267,8 @@ int Diff_Simplifier(tree_node * NODE)
 
         Tree_Clean(&LEFT);
         Tree_Clean(&RIGHT);
+
+        *simplified_flag = 1;
 
         return No_Error;
     }
@@ -282,6 +315,10 @@ int Diff_Simplifier(tree_node * NODE)
         else
             printf("Will be soon new operations...\n");
 
+        free(copy_node);
+
+        *simplified_flag = 1;
+
         return No_Error;
     }
 
@@ -293,6 +330,10 @@ int Diff_Simplifier(tree_node * NODE)
         NODE->data = copy_node->data;
         LEFT       = copy_node->left;
         RIGHT      = copy_node->right;
+
+        *simplified_flag = 1;
+
+        free(copy_node);
 
         return No_Error;
     }
@@ -306,13 +347,17 @@ int Diff_Simplifier(tree_node * NODE)
         LEFT       = copy_node->left;
         RIGHT      = copy_node->right;
 
+        *simplified_flag = 1;
+
+        free(copy_node);
+
         return No_Error;
     }
 
     else
     {
-        Diff_Simplifier(LEFT);
-        Diff_Simplifier(RIGHT);
+        Diff_Simplifier(LEFT, simplified_flag);
+        Diff_Simplifier(RIGHT, simplified_flag);
     }
 
     return No_Error;
@@ -320,25 +365,21 @@ int Diff_Simplifier(tree_node * NODE)
 
 //-------------------------------------------------------------------------------//
 
-int Find_Function_At_Point(tree_s * const my_tree, tree_node * cur_node, int value)
+int Find_Function_At_Point(tree_node * cur_node, int point)
 {
-    assert(my_tree);
-
     if (Tree_Find_Variable_Node(cur_node))
     {
         cur_node->type = Num_Type;
-        cur_node->data = value;
+        cur_node->data = point;
     }
 
     if (cur_node->left)
-        Find_Function_At_Point(my_tree, cur_node->left, value);
+        Find_Function_At_Point(cur_node->left, point);
 
     if (cur_node->right)
-        Find_Function_At_Point(my_tree, cur_node->right, value);
+        Find_Function_At_Point(cur_node->right, point);
 
-    Diff_Simplifier(cur_node);
-
-    return my_tree->root->data;
+    return Eval(cur_node);
 }
 
 //-------------------------------------------------------------------------------//
@@ -377,7 +418,7 @@ static tree_node * Is_Zero_Node(tree_node * const cur_node)
 }
 
 //-------------------------------------------------------------------------------//
-
+/*
 void Speaker(const char * string...)
 {
     va_list args = {0};
@@ -395,7 +436,7 @@ void Speaker(const char * string...)
 
     // system(cmd);
 }
-
+*/
 //-------------------------------------------------------------------------------//
 
 void Skip_Line()
@@ -411,3 +452,15 @@ void Clear_Terminal()
 }
 
 //-------------------------------------------------------------------------------//
+
+static void Introduction()
+{
+    printf("Hi, guys!\n"
+        "Enter 1 to check the tree.\n"
+        "Enter 2 to get value of the function at the point.\n"
+        "Enter 3 to get the derivative of your function\n"
+        "Enter 4 to get value of the derivative at the point\n"
+        "Enter 5 to get the the tree of derivative\n"
+        "Enter 6 to get the Maclaurin formula of function\n"
+        "Enter 10 to live the programm\n");
+}

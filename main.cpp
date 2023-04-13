@@ -13,21 +13,13 @@ int main(void)
 
     Tree_Download(&my_tree);
 
+    // //log(exp(1));
+
+    // printf("%f\n", exp(1));
+
     Start_Programm(&my_tree);
 
-    // tree_s diff_tree = {};
-
-    // Tree_Ctor(&diff_tree);
-
-    // Diff(&diff_tree, my_tree.root);
-
-    // Start_Programm(&diff_tree);
-
-    // printf("%d\n", Find_Function_At_Point(&diff_tree, diff_tree.root, 4));
-
     Tree_Dtor(&my_tree);
-
-    // Tree_Dtor(&diff_tree);
 
     Close_Log_File();
 

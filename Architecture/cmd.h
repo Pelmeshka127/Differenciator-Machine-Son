@@ -47,12 +47,12 @@ DEF_CMD(POW, Op_Pow,
 
 DEF_CMD(SIN, Op_Sin,
 {
-    return (int) sin(LEFT->data);
+    return (int) sin(EVAL(LEFT));
 })
 
 DEF_CMD(COS, Op_Cos,
 {
-    return (int) cos(LEFT->data);
+    return (int) cos(EVAL(LEFT));
 })
 
 DEF_CMD(LN, Op_Ln,
@@ -63,5 +63,5 @@ DEF_CMD(LN, Op_Ln,
         fprintf(stderr, "The value of the tree is incorrect\n");
         return Incorrect_Node;
     }
-    return (int) log(LEFT->data);
+    return (int) log(EVAL(LEFT));
 })

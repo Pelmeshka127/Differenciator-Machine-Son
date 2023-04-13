@@ -23,7 +23,7 @@ int Tex_End_File();
 /// @param my_tree 
 /// @param mode 
 /// @return 
-int Tex_Programm_Mode(tree_s * const my_tree, int mode);
+int Tex_Programm_Mode(tree_s * const my_tree, tree_s * const diff_tree, int mode);
 
 //-------------------------------------------------------------------------------//
 
@@ -46,5 +46,9 @@ int Tex_Show_Function_Tree(tree_s * const my_tree);
 int Tex_Calc_Tree(tree_s * const my_tree, int value);
 
 int Tex_Print_Tree_Node(tree_node * const cur_node);
+
+int Tex_Differenciation(tree_s * const my_tree, tree_s * const diff_tree);
+
+int Tex_Maclaurin(tree_s * const my_tree, tree_s * const diff_tree);
 
 #endif

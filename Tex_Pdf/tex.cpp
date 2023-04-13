@@ -59,7 +59,7 @@ int Tex_End_File()
 
 //-------------------------------------------------------------------------------//
 
-int Tex_Programm_Mode(tree_s * const my_tree, int mode)
+int Tex_Programm_Mode(tree_s * const my_tree, tree_s * const diff_tree, int mode)
 {
     assert(my_tree);
 
@@ -68,17 +68,47 @@ int Tex_Programm_Mode(tree_s * const my_tree, int mode)
     switch(mode)
     {
         case Show_Tree:
+            fprintf(tex_file, "\\section{Showing the source tree}\n");
             Tex_Show_Function_Tree(my_tree);
             break;
 
         case Find_Func_Value_At_Point:
-            Speaker("Enter point where you want to find value of the function: ");
+            fprintf(tex_file, "\\section{Finding function at the point}\n");
+            printf("Enter point where you want to find value of the function: ");
             while (scanf("%d", &point) != 1)
             {
                 Skip_Line();
-                Speaker("Incorrect value. Try one more time\n");
+                printf("Incorrect value. Try one more time\n");
             }
             Tex_Calc_Tree(my_tree, point);
+            fprintf(tex_file, "\\newpage\n");
+            break;
+
+        case Get_Diff:
+            fprintf(tex_file, "\\section{Getting derivative}\n");
+            Tex_Differenciation(my_tree, diff_tree);
+            break;
+
+        case Find_Diff_Value_At_Point:
+            fprintf(tex_file, "\\section{Getting derivative at the point}\n");
+            printf("Enter point where you want to find value of the derivative: ");
+            while (scanf("%d", &point) != 1)
+            {
+                Skip_Line();
+                printf("Incorrect value. Try one more time\n");
+            }
+            Tex_Calc_Tree(diff_tree, point);
+            fprintf(tex_file, "\\newpage\n");
+            break;
+
+        case Show_Diff_Tree:
+            fprintf(tex_file, "\\section{Showing the Diff tree}\n");
+            Tex_Show_Function_Tree(diff_tree);
+            break;
+
+        case Maclaurin:
+            fprintf(tex_file, "\\section{Makclurin formula}\n");
+            Tex_Maclaurin(my_tree, diff_tree);
             break;
 
         default:
@@ -95,17 +125,36 @@ int Tex_Calc_Tree(tree_s * const my_tree, int value)
 {
     assert(my_tree);
 
+    tree_s copy = {};
+    Tree_Ctor(&copy);
+
+    tree_node *copy_tree = Diff_Copy_Node(my_tree->root);
+
+    copy.root = copy_tree;
+
+    fprintf(tex_file, "\\begin{center}\n");
+
     fprintf(tex_file, "Your function is $F = ");
 
-    Tex_Print_Tree_Node(my_tree->root);
+    Tex_Print_Tree_Node(copy_tree);
 
     fprintf(tex_file, "$.\n");
 
     fprintf(tex_file, "The value of your function at %d: $ F(%d) = ", value, value);
 
-    Find_Function_At_Point(my_tree, my_tree->root, value);
+    //Tree_Dump(&copy);   
 
-    fprintf(tex_file, "%d $\n", my_tree->root->data);
+    copy_tree->data = Find_Function_At_Point(copy_tree, value);
+
+    //Tree_Dump(&copy);
+
+    fprintf(tex_file, "%d $\n", copy_tree->data);
+
+    fprintf(tex_file, "\\end{center}\n");
+
+    // free(copy_tree);
+
+    Tree_Dtor(&copy);
 
     return No_Error;
 }
@@ -233,5 +282,129 @@ int Tex_Print_Tree_Node(tree_node * const cur_node)
 
 //-------------------------------------------------------------------------------//
 
+int Tex_Differenciation(tree_s * const my_tree, tree_s * const diff_tree)
+{
+    assert(my_tree);
+    assert(diff_tree);
+
+    static int frase_num = 0;
+
+    fprintf(tex_file, "\\begin{center}\n");
+
+    char * frases [5] = {   "Oh shit, it so deep...\\\\",
+                            "Oh shit, it's depper than before\\\\",
+                            "Fuck, i'm cumming from this calculations\\\\",
+                            "Ya me te kudasay...\\\\",
+                            "Gimme gimme more, gimme gimme more\\\\"};
+                        
+    fprintf(tex_file, "$(");
+
+    Tex_Print_Tree_Node(my_tree->root);
+
+    fprintf(tex_file, ")' = ");
+    
+    Tex_Print_Tree_Node(diff_tree->root);
+    
+    fprintf(tex_file, "$\\\\\n");
+
+    int is_simplified = 0;
+
+    do {
+        is_simplified = 0;
+
+        Diff_Simplifier(diff_tree->root, &is_simplified);
+
+        fprintf(tex_file, "%s\n", frases[(frase_num++) % 5]);
+
+        fprintf(tex_file, "$(");
+        Tex_Print_Tree_Node(my_tree->root);
+        fprintf(tex_file, ")' = ");
+
+        Tex_Print_Tree_Node(diff_tree->root);
+
+        fprintf(tex_file, "$\\\\\n");
+
+        if (!is_simplified)
+            break;
+
+    } while (is_simplified);
+
+    fprintf(tex_file, "It was the best sex.., xm, differenciation ever\n");
+
+    fprintf(tex_file, "\\end{center}\n");
+
+    fprintf(tex_file, "\\newpage\n");
+
+    printf("Differenciations end\n");
+
+    return No_Error;
+}
 
 //-------------------------------------------------------------------------------//
+
+int Tex_Maclaurin(tree_s * const my_tree, tree_s * const diff_tree)
+{
+    int order = 0;
+
+    tree_node *maclaurin  = Diff_Copy_Node(my_tree->root);
+    tree_node *diff_1 = Diff_Copy_Node(diff_tree->root);
+
+    int f_0 = Find_Function_At_Point(maclaurin, 0);
+    int f_1 = Find_Function_At_Point(diff_1, 0);
+
+    printf("Enter order which you want to get decomposition: ");
+    while (scanf("%d", &order) != 1 || order < 1)
+    {
+        Skip_Line();
+        printf("Incorrect order. Try one more time\n");
+    }
+
+    fprintf(tex_file, "I like big expressions XD\\\\\n");
+
+    fprintf(tex_file, "\\begin{center}\n");
+
+    fprintf(tex_file, "$");
+
+    Tex_Print_Tree_Node(my_tree->root);
+
+    fprintf(tex_file, " = ");
+
+    if (f_0 != 0)
+        fprintf(tex_file," %d +", f_0);
+    
+    if (f_1 == 1)
+        fprintf(tex_file, " x ");
+
+    else if (f_1 == -1)
+        fprintf(tex_file, " -x ");
+
+    else if (f_1 != -1 && f_1 != 1 && f_1 != 0)
+        fprintf(tex_file, " %dx ", f_1);
+
+    for (int index = 2; index <= order; index++)
+    {
+        Diff(diff_tree, diff_tree->root);
+        tree_node * copy_node = Diff_Copy_Node(diff_tree->root);
+        copy_node->data = Find_Function_At_Point(copy_node, 0);
+
+        if (copy_node->data != 0 && copy_node->data != 1 && copy_node->data != -1)
+            fprintf(tex_file, " + \\frac{%dx^{%d}}{%d!}", copy_node->data, index, index);
+
+        else if (copy_node->data == 1)
+            fprintf(tex_file, " + \\frac{x^{%d}}{%d!}", index, index);
+
+        else if (copy_node->data == -1)
+            fprintf(tex_file, " + \\frac{-x^{%d}}{%d!}", index, index);
+
+        Tree_Clean(&copy_node);
+    }
+
+    fprintf(tex_file, " + o(x^{%d}) $\n", order);
+
+    fprintf(tex_file, "\\end{center}\n");
+
+    free(maclaurin);
+    free(diff_1);
+
+    return No_Error;
+}
