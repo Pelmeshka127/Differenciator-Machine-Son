@@ -13,10 +13,6 @@ int main(void)
 
     Tree_Download(&my_tree);
 
-    // //log(exp(1));
-
-    // printf("%f\n", exp(1));
-
     Start_Programm(&my_tree);
 
     Tree_Dtor(&my_tree);

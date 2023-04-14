@@ -131,12 +131,8 @@ tree_node * Diff(tree_s * const diff_tree, tree_node * src_root)
 
     int is_simplified = 0;
 
-    //Tree_Dump(diff_tree);
-
     do {
         is_simplified = 0;
-
-        //Tree_Dump(diff_tree);
 
         Diff_Simplifier(diff_tree->root, &is_simplified);
 
@@ -144,8 +140,6 @@ tree_node * Diff(tree_s * const diff_tree, tree_node * src_root)
             break;
 
     } while (is_simplified);
-
-    //Tree_Dump(diff_tree);
 
     return diff_tree->root;
 }
@@ -175,10 +169,17 @@ tree_node * Diff_Calc(tree_s * const my_tree, tree_node * const NODE)
             return DIV(SUB(MUL(dL, cR), MUL(cL, dR)), MUL(cR, cR));
 
             case Op_Pow:
-            //if (RIGHT->type != Var_Type && LEFT->type == Var_Type)
-            return MUL(MUL(cR, POW(cL, SUB(cR, New_Num(1)))), dL);
-            // else if (RIGHT->type == Num_Type && LEFT->type == Num_Type)
-            //     return New_Num(0);
+                if (Tree_Is_There_Variables(LEFT) && Tree_Is_There_Variables(RIGHT))
+                    return MUL(POW(cL, cR), ADD(MUL(LN(cL), dR), MUL(DIV(dL,cL), cR)));
+
+                else if (Tree_Is_There_Variables(LEFT) && !Tree_Is_There_Variables(RIGHT))
+                    return MUL(MUL(cR, POW(cL, SUB(cR, New_Num(1)))), dL);
+                
+                else if (!Tree_Is_There_Variables(LEFT) && Tree_Is_There_Variables(RIGHT))
+                    return MUL(POW(cL, cR), LN(cL));
+
+                else 
+                    return New_Num(0);
             
             case Op_Sin:
             return MUL(dL, COS(cL));

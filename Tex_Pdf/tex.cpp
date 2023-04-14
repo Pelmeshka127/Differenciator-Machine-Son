@@ -370,7 +370,7 @@ int Tex_Maclaurin(tree_s * const my_tree, tree_s * const diff_tree)
     fprintf(tex_file, " = ");
 
     if (f_0 != 0)
-        fprintf(tex_file," %d +", f_0);
+        fprintf(tex_file," %d ", f_0);
     
     if (f_1 == 1)
         fprintf(tex_file, " x ");
