@@ -47,12 +47,12 @@ DEF_CMD(POW, Op_Pow,
 
 DEF_CMD(SIN, Op_Sin,
 {
-    return (int) sin(EVAL(LEFT));
+    return (data_t) sin(EVAL(LEFT));
 })
 
 DEF_CMD(COS, Op_Cos,
 {
-    return (int) cos(EVAL(LEFT));
+    return (data_t) cos(EVAL(LEFT));
 })
 
 DEF_CMD(LN, Op_Ln,
@@ -64,4 +64,9 @@ DEF_CMD(LN, Op_Ln,
         return Incorrect_Node;
     }
     return (int) log(EVAL(LEFT));
+})
+
+DEF_CMD(EXP, Op_Exp, 
+{
+    return (data_t) exp(EVAL(LEFT));
 })

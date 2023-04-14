@@ -6,6 +6,11 @@
 #include "../Tree/dump.h"
 #include "../Tex_Pdf/tex.h"
 
+/// @brief Function checks the value of the command line arguments
+/// @param args is the number of arguments
+/// @return Cmdline_Error if there's an error, No_Error if it's ok
+int Check_Cmdline_Arg(int args);
+
 //-------------------------------------------------------------------------------//
 
 /// @brief Function starts working with the source funtion written in the tree
@@ -45,40 +50,28 @@ tree_node * Diff_Copy_Node(tree_node * const cur_node);
 
 //-------------------------------------------------------------------------------//
 
-/// @brief 
-/// @param src_root 
-/// @param diff_root 
-/// @return 
-int Diff_Print_Equation(tree_node * src_root, tree_node * diff_root);
-
-//-------------------------------------------------------------------------------//
-
-/// @brief 
-/// @param cur_node 
-/// @return 
+/// @brief Function makes three easier
+/// @param cur_node is ptr on the current node of tree
+/// @param simplified_flag is flag of simplify
+/// @return No_Error; makes simplified_flag = 1, if there's simplifiers, 0, if it's simplified
 int Diff_Simplifier(tree_node * const cur_node, int *simplified_flag);
 
 //-------------------------------------------------------------------------------//
 
-/// @brief 
-/// @param my_tree 
-/// @param cur_node 
-/// @param value 
-/// @return 
+/// @brief Function get the value of function at the point
+/// @param cur_node is ptr on the current node of the tre
+/// @param value is value of the point
+/// @return function value
 int Find_Function_At_Point(tree_node * cur_node, int value);
 
 //-------------------------------------------------------------------------------//
 
-/// @brief 
-/// @param ... 
-void Speaker(const char * string...);
-
-//-------------------------------------------------------------------------------//
-
+/// @brief Function just allows you to enter new value after a mistake
 void Skip_Line();
 
 //-------------------------------------------------------------------------------//
 
+/// @brief Function clears terminal
 void Clear_Terminal();
 
 //-------------------------------------------------------------------------------//

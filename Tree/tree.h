@@ -53,7 +53,7 @@ int Tree_Get_Size(tree_s * const my_tree, tree_node * const node);
 /// @brief Function makes tree from source file
 /// @param my_tree is ptr on the tree struct
 /// @return File_Error if creating tree failed, No_Error if it's ok
-int Tree_Download(tree_s * const my_tree);
+int Tree_Download(tree_s * const my_tree, char * file_name);
 
 //-------------------------------------------------------------------------------//
 
@@ -80,16 +80,16 @@ int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long
 
 //-------------------------------------------------------------------------------//
 
-/// @brief 
-/// @param variable 
-/// @return 
+/// @brief Function gets code of variable by it's symbol
+/// @param variable is symbol of the variable
+/// @return the code of the variable
 int Tree_Get_Number_By_Variable(char * variable);
 
 //-------------------------------------------------------------------------------//
 
-/// @brief 
-/// @param variable 
-/// @return 
+/// @brief Function gets the symbol of the variable by it's code
+/// @param variable is the code of the variable
+/// @return the symbol of the variable
 char Tree_Get_Variable_By_Number(int variable);
 
 //-------------------------------------------------------------------------------//
@@ -123,16 +123,16 @@ int Tree_Print_Post_Order(tree_node * const cur_node, FILE * dst_file);
 
 //-------------------------------------------------------------------------------//
 
-/// @brief 
-/// @param cur_node 
-/// @return 
+/// @brief Function find out if the node is variable node
+/// @param cur_node is ptr on the current node
+/// @return Var_Type if it's variable, No_Error if it isn't
 int Tree_Find_Variable_Node(tree_node * const cur_node);
 
 //-------------------------------------------------------------------------------//
 
-/// @brief 
-/// @param cur_node 
-/// @return 
+/// @brief Function looks after variables in the tree
+/// @param cur_node is ptr on the current node
+/// @return Var_Type if there's variable in the node, No_Error if there isn't variables
 int Tree_Is_There_Variables(tree_node * const cur_node);
 
 //-------------------------------------------------------------------------------//

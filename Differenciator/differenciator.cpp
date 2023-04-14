@@ -151,52 +151,55 @@ tree_node * Diff_Calc(tree_s * const my_tree, tree_node * const NODE)
     switch(NODE->type)
     {
         case Num_Type:
-        return New_Num(0);
+            return New_Num(0);
 
         case Op_Type:
-        switch(NODE->data)
-        {
-            case Op_Add:
-            return ADD(dL, dR);
+            switch(NODE->data)
+            {
+                case Op_Add:
+                    return ADD(dL, dR);
 
-            case Op_Sub:
-            return SUB(dL, dR);
+                case Op_Sub:
+                    return SUB(dL, dR);
 
-            case Op_Mul:
-            return ADD(MUL(dL, cR), MUL(cL, dR));
+                case Op_Mul:
+                    return ADD(MUL(dL, cR), MUL(cL, dR));
 
-            case Op_Div:
-            return DIV(SUB(MUL(dL, cR), MUL(cL, dR)), MUL(cR, cR));
+                case Op_Div:
+                    return DIV(SUB(MUL(dL, cR), MUL(cL, dR)), MUL(cR, cR));
 
-            case Op_Pow:
-                if (Tree_Is_There_Variables(LEFT) && Tree_Is_There_Variables(RIGHT))
-                    return MUL(POW(cL, cR), ADD(MUL(LN(cL), dR), MUL(DIV(dL,cL), cR)));
+                case Op_Pow:
+                    if (Tree_Is_There_Variables(LEFT) && Tree_Is_There_Variables(RIGHT))
+                        return MUL(POW(cL, cR), ADD(MUL(LN(cL), dR), MUL(DIV(dL,cL), cR)));
 
-                else if (Tree_Is_There_Variables(LEFT) && !Tree_Is_There_Variables(RIGHT))
-                    return MUL(MUL(cR, POW(cL, SUB(cR, New_Num(1)))), dL);
+                    else if (Tree_Is_There_Variables(LEFT) && !Tree_Is_There_Variables(RIGHT))
+                        return MUL(MUL(cR, POW(cL, SUB(cR, New_Num(1)))), dL);
+                    
+                    else if (!Tree_Is_There_Variables(LEFT) && Tree_Is_There_Variables(RIGHT))
+                        return MUL(POW(cL, cR), MUL(LN(cL), dR));
+
+                    else 
+                        return New_Num(0);
                 
-                else if (!Tree_Is_There_Variables(LEFT) && Tree_Is_There_Variables(RIGHT))
-                    return MUL(POW(cL, cR), LN(cL));
+                case Op_Sin:
+                    return MUL(dL, COS(cL));
 
-                else 
-                    return New_Num(0);
-            
-            case Op_Sin:
-            return MUL(dL, COS(cL));
+                case Op_Cos:
+                    return MUL(dL, MUL(SIN(cL), New_Num(-1)));
 
-            case Op_Cos:
-            return MUL(dL, MUL(SIN(cL), New_Num(-1)));
+                case Op_Ln:
+                    return DIV(dL, cL);
 
-            case Op_Ln:
-                return DIV(dL, cL);
+                case Op_Exp:
+                    return MUL(EXP(cL), dL);
 
-            default:
-                fprintf(stderr, "Incorrect type of operation %d, in %s",  NODE->data, __PRETTY_FUNCTION__);
-                return nullptr;
-        }
+                default:
+                    fprintf(stderr, "Incorrect type of operation %d, in %s",  NODE->data, __PRETTY_FUNCTION__);
+                    return nullptr;
+            }
 
         case Var_Type:
-        return New_Num(1);
+            return New_Num(1);
 
         default:
             fprintf(stderr, "Incorrect type %d, in %s",  NODE->data, __PRETTY_FUNCTION__);
@@ -227,28 +230,6 @@ tree_node * Diff_Copy_Node(tree_node * const cur_node)
         copy_node->right = Diff_Copy_Node(cur_node->right);
 
     return copy_node;
-}
-
-//-------------------------------------------------------------------------------//
-
-int Diff_Print_Equation(tree_node * src_root, tree_node * diff_root)
-{
-    FILE * diff_file = fopen("trees/diff_file", "w");
-    if (diff_file == nullptr)
-    {
-        fprintf(stderr, "Failed openning file with of tree printing in function %s\n", __PRETTY_FUNCTION__);
-        return File_Error;
-    }
-
-    Tree_Print_In_Order(src_root, diff_file);
-
-    fprintf(diff_file, "' = ");
-
-    Tree_Print_In_Order(diff_root, diff_file);
-
-    fclose(diff_file);
-
-    return No_Error;
 }
 
 //-------------------------------------------------------------------------------//
@@ -464,4 +445,16 @@ static void Introduction()
         "Enter 5 to get the the tree of derivative\n"
         "Enter 6 to get the Maclaurin formula of function\n"
         "Enter 10 to live the programm\n");
+}
+
+//-------------------------------------------------------------------------------//
+
+int Check_Cmdline_Arg(int args)
+{
+    if (args != 2)
+    {
+        fprintf(stderr, "Error: wrong number of command line args: %d\n", args);
+        return Cmdline_Error;
+    }
+    return No_Error;
 }

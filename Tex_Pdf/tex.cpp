@@ -140,19 +140,13 @@ int Tex_Calc_Tree(tree_s * const my_tree, int value)
 
     fprintf(tex_file, "$.\n");
 
-    fprintf(tex_file, "The value of your function at %d: $ F(%d) = ", value, value);
-
-    //Tree_Dump(&copy);   
+    fprintf(tex_file, "The value of your function at %d: $ F(%d) = ", value, value);   
 
     copy_tree->data = Find_Function_At_Point(copy_tree, value);
-
-    //Tree_Dump(&copy);
 
     fprintf(tex_file, "%d $\n", copy_tree->data);
 
     fprintf(tex_file, "\\end{center}\n");
-
-    // free(copy_tree);
 
     Tree_Dtor(&copy);
 
@@ -266,6 +260,12 @@ int Tex_Print_Tree_Node(tree_node * const cur_node)
                     fprintf(tex_file, ")");
                     break;
 
+                case Op_Exp:
+                    fprintf(tex_file, "e^{");
+                    Tex_Print_Tree_Node(cur_node->left);
+                    fprintf(tex_file, "}");
+                    break;
+
                 default:
                     fprintf(stderr, "Incorrect node writing in tex\n");
                     return Incorrect_Node;
@@ -370,16 +370,16 @@ int Tex_Maclaurin(tree_s * const my_tree, tree_s * const diff_tree)
     fprintf(tex_file, " = ");
 
     if (f_0 != 0)
-        fprintf(tex_file," %d ", f_0);
+        fprintf(tex_file," %d + ", f_0);
     
     if (f_1 == 1)
-        fprintf(tex_file, " x ");
+        fprintf(tex_file, " x + ");
 
     else if (f_1 == -1)
-        fprintf(tex_file, " -x ");
+        fprintf(tex_file, " -x + ");
 
     else if (f_1 != -1 && f_1 != 1 && f_1 != 0)
-        fprintf(tex_file, " %dx ", f_1);
+        fprintf(tex_file, " %dx + ", f_1);
 
     for (int index = 2; index <= order; index++)
     {
@@ -388,23 +388,23 @@ int Tex_Maclaurin(tree_s * const my_tree, tree_s * const diff_tree)
         copy_node->data = Find_Function_At_Point(copy_node, 0);
 
         if (copy_node->data != 0 && copy_node->data != 1 && copy_node->data != -1)
-            fprintf(tex_file, " + \\frac{%dx^{%d}}{%d!}", copy_node->data, index, index);
+            fprintf(tex_file, "\\frac{%dx^{%d}}{%d!} + ", copy_node->data, index, index);
 
         else if (copy_node->data == 1)
-            fprintf(tex_file, " + \\frac{x^{%d}}{%d!}", index, index);
+            fprintf(tex_file, "\\frac{x^{%d}}{%d!} + ", index, index);
 
         else if (copy_node->data == -1)
-            fprintf(tex_file, " + \\frac{-x^{%d}}{%d!}", index, index);
+            fprintf(tex_file, "\\frac{-x^{%d}}{%d!} + ", index, index);
 
         Tree_Clean(&copy_node);
     }
 
-    fprintf(tex_file, " + o(x^{%d}) $\n", order);
+    fprintf(tex_file, "o(x^{%d}) $\n", order);
 
     fprintf(tex_file, "\\end{center}\n");
 
-    free(maclaurin);
-    free(diff_1);
+    Tree_Clean(&maclaurin);
+    Tree_Clean(&diff_1);
 
     return No_Error;
 }

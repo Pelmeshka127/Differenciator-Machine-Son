@@ -45,6 +45,9 @@
 #define LN(left)    \
     Tree_New_Node(Op_Type, Op_Ln, left, nullptr)
 
+#define EXP(left)   \
+    Tree_New_Node(Op_Type, Op_Exp, left, nullptr)
+
 #define New_Num(data) \
     Tree_New_Node(Num_Type, data)
 

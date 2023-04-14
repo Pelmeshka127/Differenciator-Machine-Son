@@ -59,11 +59,11 @@ int Tree_Get_Size(tree_s * const my_tree, tree_node * const node)
 
 //-------------------------------------------------------------------------------//
 
-int Tree_Download(tree_s * const my_tree)
+int Tree_Download(tree_s * const my_tree, char * file_name)
 {
     Text_Info onegin = {};
 
-    FILE * input_file  = fopen("trees/3.txt", "r");
+    FILE * input_file  = fopen(file_name, "r");
     if (input_file == nullptr)
     {
         fprintf(stderr, "Failed reading file with source tree in function %s\n", __PRETTY_FUNCTION__);
@@ -186,7 +186,8 @@ int Tree_Get_Number_By_Operator(char * operation)
         return Op_Sin;
     else if (strcmp("cos", operation) == 0)
         return Op_Cos;
-    
+    else if (strcmp("exp", operation) == 0)
+        return Op_Exp;
 
     else
         return Incorrect_Type;
@@ -212,6 +213,8 @@ int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long
         strncpy(oper_symbol, "cos", len);
     else if (operation == Op_Ln)
         strncpy(oper_symbol, "ln", len);
+    else if (operation == Op_Exp)
+        strncpy(oper_symbol, "exp", len);
 
     else
     {
@@ -308,7 +311,6 @@ int Tree_Printer(tree_node * cur_node, const int print_type)
 
     return No_Error;
 }
-
 
 //-------------------------------------------------------------------------------//
 
@@ -431,7 +433,6 @@ int Tree_Is_There_Variables(tree_node * const cur_node)
 }
 
 //-------------------------------------------------------------------------------//
-
 
 int Tree_Clean(tree_node ** root)
 {

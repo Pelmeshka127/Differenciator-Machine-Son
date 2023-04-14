@@ -9,10 +9,11 @@ enum Errors_Code {
     Incorrect_Node  = 4,
     Underflow       = 5,
     Overflow        = 6,
+    Incorrect_Mode  = 7,
+    Cmdline_Error   = 8,
+    Empty_Node      = 9,
     Incorrect_Type  = 20,
     Incorrect_Var   = 21,
-    Empty_Node      = 9,
-    Incorrect_Mode  = 7,
 };
 
 const int Num_Type = 1;
@@ -30,6 +31,7 @@ enum Operation_Types {
     Op_Sin      = 6,
     Op_Cos      = 7,
     Op_Ln       = 8,
+    Op_Exp      = 9,
 };
 
 enum Var_Types {
