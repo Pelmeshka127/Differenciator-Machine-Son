@@ -2,7 +2,9 @@
 
 //-------------------------------------------------------------------------------//
 
-static FILE * log_file = nullptr;
+static FILE *log_file = nullptr;
+
+static FILE *graph_file = nullptr;
 
 static int graph_num  = 1;
 
@@ -39,7 +41,7 @@ int Tree_Dump(tree_s * const my_tree)
 
     assert(my_tree);
 
-    FILE * graph_file = fopen("graphics/graph.dot", "w");
+    graph_file = fopen("graphics/graph.dot", "w");
     if (graph_file == nullptr)
     {
         fprintf(stderr, "Failed openning graph.dot in function %s\n", __PRETTY_FUNCTION__);
@@ -53,7 +55,7 @@ int Tree_Dump(tree_s * const my_tree)
     fprintf(graph_file, "   node[fontsize=14];\n   edge[color=\"black\",fontcolor=\"blue\",fontsize=12];\n");
     fprintf(graph_file, "   tree[shape = Mrecord, style = filled, filcolor = \"red\", "
                         "label = \"My Tree | size = %d\"];\n", my_tree->size);
-    Tree_Draw(my_tree->root, graph_file);
+    Tree_Draw(my_tree->root);
     fprintf(graph_file, "   tree -> \"%p\" [color = \"red\"];\n", my_tree->root);
     fprintf(graph_file, "}");
 
@@ -79,7 +81,7 @@ int Tree_Dump(tree_s * const my_tree)
 
 //-------------------------------------------------------------------------------//
 
-void Tree_Draw(tree_node * const root, FILE * graph_file)
+void Tree_Draw(tree_node * const root)
 {
     assert(root);
 
@@ -105,10 +107,10 @@ void Tree_Draw(tree_node * const root, FILE * graph_file)
         fprintf(graph_file, "  \"%p\" -> \"%p\" [color = \"red\"];\n", root, root->right);
 
     if (root->left != nullptr)
-        Tree_Draw(root->left, graph_file);
+        Tree_Draw(root->left);
 
     if (root->right != nullptr)
-        Tree_Draw(root->right, graph_file);
+        Tree_Draw(root->right);
 }
 
 //-------------------------------------------------------------------------------//

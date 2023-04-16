@@ -241,7 +241,6 @@ int Diff_Simplifier(tree_node * NODE, int *simplified_flag)
 
     if (NODE->type == Op_Type && LEFT->type == Num_Type && RIGHT->type == Num_Type)
     {
-        //printf("Yes\n");
         data_t node_value = Eval(NODE);
         
         NODE->data = node_value;
@@ -399,26 +398,6 @@ static tree_node * Is_Zero_Node(tree_node * const cur_node)
         return nullptr;
 }
 
-//-------------------------------------------------------------------------------//
-/*
-void Speaker(const char * string...)
-{
-    va_list args = {0};
-    va_start (args, string);
-
-    char message[500] = {};
-
-    vsprintf(message, string, args);
-
-    printf("%s", message);
-
-    // char cmd[550] = {};
-
-    // sprintf(cmd, "espeak -s 150 -v en \"%s\"", message);
-
-    // system(cmd);
-}
-*/
 //-------------------------------------------------------------------------------//
 
 void Skip_Line()

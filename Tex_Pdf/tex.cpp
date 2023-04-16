@@ -347,10 +347,10 @@ int Tex_Maclaurin(tree_s * const my_tree, tree_s * const diff_tree)
     int order = 0;
 
     tree_node *maclaurin  = Diff_Copy_Node(my_tree->root);
-    tree_node *diff_1 = Diff_Copy_Node(diff_tree->root);
+    tree_node *diff = Diff_Copy_Node(diff_tree->root);
 
     int f_0 = Find_Function_At_Point(maclaurin, 0);
-    int f_1 = Find_Function_At_Point(diff_1, 0);
+    int f_1 = Find_Function_At_Point(diff, 0);
 
     printf("Enter order which you want to get decomposition: ");
     while (scanf("%d", &order) != 1 || order < 1)
@@ -404,7 +404,7 @@ int Tex_Maclaurin(tree_s * const my_tree, tree_s * const diff_tree)
     fprintf(tex_file, "\\end{center}\n");
 
     Tree_Clean(&maclaurin);
-    Tree_Clean(&diff_1);
+    Tree_Clean(&diff);
 
     return No_Error;
 }

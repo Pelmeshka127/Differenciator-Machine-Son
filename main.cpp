@@ -16,7 +16,7 @@ int main(int argc, char ** argv)
 
     Tree_Download(&my_tree, argv[1]);
 
-    Tree_Dump(&my_tree);
+    //Tree_Dump(&my_tree);
 
     Start_Programm(&my_tree);
 

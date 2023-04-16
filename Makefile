@@ -18,8 +18,8 @@ FLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++\
 			   -fsanitize=float-divide-by-zero,integer-divide-by-zero,nonnull-attribute,null,\
 			   -fsanitize=address,signed-integer-overflow,undefined,unreachable,vla-bound,vptr,
 
-difftask: main.o tree.o dump.o parser.o diff.o tex.o
-	g++ obj/main.o obj/tree.o obj/dump.o obj/parser.o obj/diff.o obj/tex.o $(FLAGS) -o diff
+difftask: main.o tree.o dump.o parser.o diff.o tex.o decsent.o
+	g++ obj/main.o obj/tree.o obj/dump.o obj/parser.o obj/diff.o obj/tex.o obj/decsent.o $(FLAGS) -o diff
 
 main.o: ./main.cpp
 	g++ -c ./main.cpp $(FLAGS) -o obj/main.o
@@ -38,6 +38,9 @@ diff.o: ./Differenciator/differenciator.cpp
 
 tex.o: ./Tex_Pdf/tex.cpp
 	g++ -c ./Tex_Pdf/tex.cpp $(FLAGS) -o obj/tex.o
+
+decsent.o: ./Recursive_Decsent/decsent.cpp
+	g++ -c ./Recursive_Decsent/decsent.cpp $(FLAGS) -o obj/decsent.o
 
 .PHONY: clean
 

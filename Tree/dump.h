@@ -27,10 +27,12 @@ int Tree_Dump(tree_s * const my_tree);
 
 /// @brief Function draws nodes of the tree
 /// @param root is ptr on the tree node
-void Tree_Draw(tree_node * const node, FILE * graph_file);
+void Tree_Draw(tree_node * const node);
 
 //-------------------------------------------------------------------------------//
 
 void Tree_Dump_To_Tex(tree_s * const my_tree, char * png_name);
+
+void Tree_Dump_Node(tree_node * const node);
 
 #endif

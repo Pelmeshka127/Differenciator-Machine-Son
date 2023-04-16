@@ -1,5 +1,6 @@
 #include "tree.h"
 #include "dump.h"
+#include "../Recursive_Decsent/decsent.h"
 
 //-------------------------------------------------------------------------------//
 
@@ -82,11 +83,14 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
         return File_Error;
     }
 
-    if (Tree_Reader(&onegin, my_tree, &my_tree->root) != No_Error)
-    {
-        fprintf(stderr, "Reading of thr tree failed ion function %s\n", __PRETTY_FUNCTION__);
-        return File_Error;
-    }
+    // if (Tree_Reader(&onegin, my_tree, &my_tree->root) != No_Error)
+    // {
+    //     fprintf(stderr, "Reading of thr tree failed ion function %s\n", __PRETTY_FUNCTION__);
+    //     return File_Error;
+    // }
+    //printf("%c\n", onegin.buffer[1]);
+
+    my_tree->root = Get_General(onegin.pointers); //Adding recursive decsent
 
     Onegin_Dtor(&onegin);
 
