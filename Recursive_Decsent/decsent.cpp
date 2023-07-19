@@ -8,6 +8,8 @@ tree_node * Get_General(char **str)
 
     assert(**str == '\0');
 
+    // Tree_Dump_Node(node);
+
     return node;
 }
 
@@ -19,10 +21,14 @@ tree_node * Get_Add_Or_Sub(char **str)
 
     while (**str == '+' || **str == '-')
     {
+        // Tree_Dump_Node(node_1);
+        
         char op = **str;
         (*str)++;
 
         tree_node *node_2 = Get_Mul_Or_Div(str);
+
+        // Tree_Dump_Node(node_2);
 
         if (op == '+')
             node_1 = ADD(node_1, node_2);
@@ -41,10 +47,14 @@ tree_node * Get_Mul_Or_Div(char **str)
 
     while (**str == '*' || **str == '/')
     {
+        // Tree_Dump_Node(node_1);
+
         char op = **str;
         (*str)++;
 
         tree_node *node_2 = Get_Power(str);
+
+        // Tree_Dump_Node(node_2);
 
         if (op == '*')
             node_1 = MUL(node_1, node_2);
@@ -63,9 +73,13 @@ tree_node * Get_Power(char **str)
 
     while (**str == '^')
     {
+        // Tree_Dump_Node(node_1);
+
         (*str)++;
 
         tree_node *node_2 = Get_Func(str);
+
+        // Tree_Dump_Node(node_2);
 
         node_1 = POW(node_1, node_2);
     }
@@ -79,7 +93,7 @@ tree_node * Get_Func(char **str)
 {
     int op = Is_Func(str);
 
-    if (op != No_Error)
+    if (op)
     {
         tree_node *node = Get_Petrovich(str);
 

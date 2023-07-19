@@ -83,118 +83,11 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
         return File_Error;
     }
 
-    // if (Tree_Reader(&onegin, my_tree, &my_tree->root) != No_Error)
-    // {
-    //     fprintf(stderr, "Reading of thr tree failed ion function %s\n", __PRETTY_FUNCTION__);
-    //     return File_Error;
-    // }
-    //printf("%c\n", onegin.buffer[1]);
-
     my_tree->root = Get_General(onegin.pointers); //Adding recursive decsent
 
     Onegin_Dtor(&onegin);
 
     return No_Error;
-}
-
-//-------------------------------------------------------------------------------//
-
-int Tree_Reader(Text_Info * const onegin, tree_s * const my_tree, tree_node ** cur_node)
-{
-    assert(onegin);
-    assert(my_tree);
-
-    char node_symbol[5] = "";
-    int node_value = 0;
-
-    if (**onegin->pointers == '(')
-    {
-        if (sscanf(*onegin->pointers, "( %d )", &node_value))
-        {
-            *cur_node = Tree_New_Node(Num_Type, node_value);
-            while (**onegin->pointers != ')')
-                (*onegin->pointers)++;
-
-            return No_Error;
-        }
-        
-        else
-        {
-            sscanf(*onegin->pointers, "( %s )", node_symbol);
-            (*onegin->pointers)++;
-
-            if ((node_value = Tree_Get_Number_By_Operator(node_symbol)) != Incorrect_Type)
-            {
-                *cur_node = Tree_New_Node(Op_Type, node_value);
-
-                while (**onegin->pointers != '(')
-                    (*onegin->pointers)++;
-
-                Tree_Reader(onegin, my_tree, &(*cur_node)->left);
-                
-                if (node_value < Op_Sin)
-                {
-                    while (**onegin->pointers != '(')
-                        (*onegin->pointers)++;
-
-                    Tree_Reader(onegin, my_tree, &(*cur_node)->right);
-                }
-
-                else if (node_value >= Op_Sin)
-                    (*cur_node)->right = nullptr;
-
-               return No_Error;
-            }
-
-            else if ((node_value = Tree_Get_Number_By_Variable(node_symbol)) != Incorrect_Var)
-            {
-                *cur_node = Tree_New_Node(Var_Type, node_value);
-                while (**onegin->pointers != ')')
-                    (*onegin->pointers)++;
-
-                return No_Error;
-            }
-
-            else
-            {
-                fprintf(stderr, "No any varaibles and operations in %s\n", __PRETTY_FUNCTION__);
-                return File_Error;
-            }
-        }
-    }
-
-    else
-    {
-        fprintf(stderr, "Incorrect start of the tree: %s. Failed reading in function %s", __PRETTY_FUNCTION__, *onegin->pointers);
-        return File_Error;
-    }
-}
-
-//-------------------------------------------------------------------------------//
-
-int Tree_Get_Number_By_Operator(char * operation)
-{
-    if (strcmp("+", operation) == 0)
-        return Op_Add;
-    else if (strcmp("-", operation) == 0)
-        return Op_Sub;
-    else if (strcmp("*", operation) == 0)
-        return Op_Mul;
-    else if (strcmp("/", operation) == 0)
-        return Op_Div;
-    else if (strcmp("^", operation) == 0)
-        return Op_Pow;
-    else if (strcmp("ln", operation) == 0)
-        return Op_Ln;
-    else if (strcmp("sin", operation) == 0)
-        return Op_Sin;
-    else if (strcmp("cos", operation) == 0)
-        return Op_Cos;
-    else if (strcmp("exp", operation) == 0)
-        return Op_Exp;
-
-    else
-        return Incorrect_Type;
 }
 
 //-------------------------------------------------------------------------------//
@@ -231,180 +124,16 @@ int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long
 
 //-------------------------------------------------------------------------------//
 
-int Tree_Get_Number_By_Variable(char * variable)
-{
-    if (*variable == 'x')
-        return Var_X;
-    else if (*variable == 'y')
-        return Var_Y;
-    else if (*variable == 'z')
-        return Var_Z;
-    
-    else
-    {
-        //fprintf(stderr, "Incorrect type of variable %c in %s\n", *variable, __PRETTY_FUNCTION__);
-        return Incorrect_Var;
-    }
-}
-
-//-------------------------------------------------------------------------------//
-
 char Tree_Get_Variable_By_Number(int variable)
 {
     if (variable == Var_X)
         return 'x';
-    else if (variable == Var_Y)
-        return 'y';
-    else if (variable == Var_Z)
-        return 'z';
 
     else
     {
         //fprintf(stderr, "Incorrect type of variable %d in %s\n", variable, __PRETTY_FUNCTION__);
         return Incorrect_Var;
     }
-}
-
-//-------------------------------------------------------------------------------//
-
-int Tree_Printer(tree_node * cur_node, const int print_type)
-{   
-    const char * file_name = nullptr;
-    switch(print_type)
-    {
-        case Pre_Order:
-        file_name = "trees/pre_order_tree.txt";
-        break;
-
-        case In_Order:
-        file_name = "trees/in_order_tree.txt";
-        break;
-
-        case Post_Order:
-        file_name = "trees/post_order_tree.txt";
-        break;
-
-        default:
-        fprintf(stderr, "Incorrect type of tree print in function %s: %d\n", __PRETTY_FUNCTION__, print_type);
-        return File_Error;
-    }
-
-    FILE * dst_file = fopen(file_name, "w");
-    if (dst_file == nullptr)
-    {
-        fprintf(stderr, "Failed openning file with of tree printing in function %s\n", __PRETTY_FUNCTION__);
-        return File_Error;
-    }   
-
-    switch(print_type)
-    {
-        case Pre_Order:
-        Tree_Print_Pre_Order(cur_node, dst_file);
-        break;
-
-        case In_Order:
-        Tree_Print_In_Order(cur_node, dst_file);
-        break;
-
-        case Post_Order:
-        Tree_Print_Post_Order(cur_node, dst_file);
-        break;
-    }
-
-    fclose(dst_file);
-
-    return No_Error;
-}
-
-//-------------------------------------------------------------------------------//
-
-int Tree_Print_Pre_Order(tree_node * const cur_node, FILE * dst_file)
-{
-    if (cur_node == nullptr)
-        return No_Error;
-
-    fprintf(dst_file, " ( ");
-
-    if (cur_node->type == Num_Type)
-        fprintf(dst_file, "%d", cur_node->data);
-
-    else if (cur_node->type == Op_Type)
-    {
-        char oper_symbol[Oper_Len] = "";
-        Tree_Get_Operator_By_Number(cur_node->data, oper_symbol, Oper_Len);
-        fprintf(dst_file, "%s", oper_symbol);
-    }
-
-    else if (cur_node->type == Var_Type)
-        fprintf(dst_file, "%c", Tree_Get_Variable_By_Number(cur_node->data));
-
-    Tree_Print_Pre_Order(cur_node->left, dst_file);
-    Tree_Print_Pre_Order(cur_node->right, dst_file);
-
-    fprintf(dst_file, " ) ");
-
-    return No_Error;
-}
-
-//-------------------------------------------------------------------------------//
-
-int Tree_Print_In_Order(tree_node * const cur_node, FILE * dst_file)
-{
-    if (cur_node == nullptr)
-        return No_Error;
-
-    fprintf(dst_file, " ( ");    
-
-    Tree_Print_In_Order(cur_node->left, dst_file);    
-
-    if (cur_node->type == Num_Type)
-        fprintf(dst_file, "%d", cur_node->data);
-        
-    else if (cur_node->type == Op_Type)
-    {   
-        char oper_symbol[Oper_Len] = "";
-        Tree_Get_Operator_By_Number(cur_node->data, oper_symbol, Oper_Len);
-        fprintf(dst_file, "%s", oper_symbol);
-    }
-
-    else if (cur_node->type == Var_Type)
-        fprintf(dst_file, "%c", Tree_Get_Variable_By_Number(cur_node->data));
-
-    Tree_Print_In_Order(cur_node->right, dst_file);
-
-    fprintf(dst_file, " ) ");
-    
-    return No_Error;
-}
-
-//-------------------------------------------------------------------------------//
-
-int Tree_Print_Post_Order(tree_node * const cur_node, FILE * dst_file)
-{
-    if (cur_node == nullptr)
-        return No_Error;
-
-    fprintf(dst_file, " ( ");
-
-    Tree_Print_Post_Order(cur_node->left, dst_file);
-    Tree_Print_Post_Order(cur_node->right, dst_file);
-
-    if (cur_node->type == Num_Type)
-        fprintf(dst_file, "%d", cur_node->data);
-
-    else if (cur_node->type == Op_Type)
-    {
-        char oper_symbol[Oper_Len] = "";
-        Tree_Get_Operator_By_Number(cur_node->data, oper_symbol, Oper_Len);
-        fprintf(dst_file, "%s", oper_symbol);
-    }
-
-    else if (cur_node->type == Var_Type)
-        fprintf(dst_file, "%c", Tree_Get_Variable_By_Number(cur_node->data));
-
-    fprintf(dst_file, " ) ");
-
-    return No_Error;
 }
 
 //-------------------------------------------------------------------------------//
@@ -470,4 +199,77 @@ int Tree_Dtor(tree_s * const my_tree)
     return No_Error;
 }
 
-//-------------------------------------------------------------------------------//
+// //-------------------------------------------------------------------------------//
+
+// int Tree_Reader(Text_Info * const onegin, tree_s * const my_tree, tree_node ** cur_node)
+// {
+//     assert(onegin);
+//     assert(my_tree);
+
+//     char node_symbol[5] = "";
+//     int node_value = 0;
+
+//     if (**onegin->pointers == '(')
+//     {
+//         if (sscanf(*onegin->pointers, "( %d )", &node_value))
+//         {
+//             *cur_node = Tree_New_Node(Num_Type, node_value);
+//             while (**onegin->pointers != ')')
+//                 (*onegin->pointers)++;
+
+//             return No_Error;
+//         }
+        
+//         else
+//         {
+//             sscanf(*onegin->pointers, "( %s )", node_symbol);
+//             (*onegin->pointers)++;
+
+//             if ((node_value = Tree_Get_Number_By_Operator(node_symbol)) != Incorrect_Type)
+//             {
+//                 *cur_node = Tree_New_Node(Op_Type, node_value);
+
+//                 while (**onegin->pointers != '(')
+//                     (*onegin->pointers)++;
+
+//                 Tree_Reader(onegin, my_tree, &(*cur_node)->left);
+                
+//                 if (node_value < Op_Sin)
+//                 {
+//                     while (**onegin->pointers != '(')
+//                         (*onegin->pointers)++;
+
+//                     Tree_Reader(onegin, my_tree, &(*cur_node)->right);
+//                 }
+
+//                 else if (node_value >= Op_Sin)
+//                     (*cur_node)->right = nullptr;
+
+//                return No_Error;
+//             }
+
+//             else if ((node_value = Tree_Get_Number_By_Variable(node_symbol)) != Incorrect_Var)
+//             {
+//                 *cur_node = Tree_New_Node(Var_Type, node_value);
+//                 while (**onegin->pointers != ')')
+//                     (*onegin->pointers)++;
+
+//                 return No_Error;
+//             }
+
+//             else
+//             {
+//                 fprintf(stderr, "No any varaibles and operations in %s\n", __PRETTY_FUNCTION__);
+//                 return File_Error;
+//             }
+//         }
+//     }
+
+//     else
+//     {
+//         fprintf(stderr, "Incorrect start of the tree: %s. Failed reading in function %s", __PRETTY_FUNCTION__, *onegin->pointers);
+//         return File_Error;
+//     }
+// }
+
+// //-------------------------------------------------------------------------------//

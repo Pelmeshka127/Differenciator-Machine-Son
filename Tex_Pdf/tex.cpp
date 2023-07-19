@@ -23,8 +23,8 @@ int Tex_Start_File()
                       "\\geometry{papersize={29.7 cm, 25.0 cm}}\n");
     fprintf(tex_file, "\\usepackage{graphicx}\n");
 
-    fprintf(tex_file, "\\title{DIFFERENCIATOR MACHINE}\n");
-    fprintf(tex_file, "\\author{Makson from 225}\n");
+    fprintf(tex_file, "\\title{DIFFERENCIATOR MACHINE, SON}\n");
+    fprintf(tex_file, "\\author{Pelmeshka127 from 225}\n");
     fprintf(tex_file, "\\date{}\n");
 
     fprintf(tex_file, "\\begin{document}\n");
@@ -291,11 +291,11 @@ int Tex_Differenciation(tree_s * const my_tree, tree_s * const diff_tree)
 
     fprintf(tex_file, "\\begin{center}\n");
 
-    char * frases [5] = {   "Oh shit, it so deep...\\\\",
-                            "Oh shit, it's depper than before\\\\",
-                            "Fuck, i'm cumming from this calculations\\\\",
-                            "Ya me te kudasay...\\\\",
-                            "Gimme gimme more, gimme gimme more\\\\"};
+    static const char frases [5][50] = {"Oh shit, it so deep...\\\\",
+                                        "Oh shit, it's depper than before\\\\",
+                                        "Fuck, i'm cumming from this calculations\\\\",
+                                        "Ya me te kudasay...\\\\",
+                                        "Gimme gimme more, gimme gimme more\\\\"};
                         
     fprintf(tex_file, "$(");
 
@@ -314,6 +314,9 @@ int Tex_Differenciation(tree_s * const my_tree, tree_s * const diff_tree)
 
         Diff_Simplifier(diff_tree->root, &is_simplified);
 
+        if (!is_simplified)
+            break;
+
         fprintf(tex_file, "%s\n", frases[(frase_num++) % 5]);
 
         fprintf(tex_file, "$(");
@@ -323,9 +326,6 @@ int Tex_Differenciation(tree_s * const my_tree, tree_s * const diff_tree)
         Tex_Print_Tree_Node(diff_tree->root);
 
         fprintf(tex_file, "$\\\\\n");
-
-        if (!is_simplified)
-            break;
 
     } while (is_simplified);
 
@@ -346,7 +346,7 @@ int Tex_Maclaurin(tree_s * const my_tree, tree_s * const diff_tree)
 {
     int order = 0;
 
-    tree_node *maclaurin  = Diff_Copy_Node(my_tree->root);
+    tree_node *maclaurin = Diff_Copy_Node(my_tree->root);
     tree_node *diff = Diff_Copy_Node(diff_tree->root);
 
     int f_0 = Find_Function_At_Point(maclaurin, 0);
@@ -408,3 +408,5 @@ int Tex_Maclaurin(tree_s * const my_tree, tree_s * const diff_tree)
 
     return No_Error;
 }
+
+//-------------------------------------------------------------------------------//

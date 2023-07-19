@@ -36,8 +36,6 @@ enum Operation_Types {
 
 enum Var_Types {
     Var_X   = 1,
-    Var_Y   = 2,
-    Var_Z   = 3,
 };
 
 enum Programm_Mode {
@@ -49,12 +47,6 @@ enum Programm_Mode {
     Maclaurin                   = 6,
     Finish_Prog                 = 10,
 };
-
-const int Pre_Order  = 1;
-
-const int In_Order   = 2;
-
-const int Post_Order = 3;
 
 const int Oper_Len   = 5;
 

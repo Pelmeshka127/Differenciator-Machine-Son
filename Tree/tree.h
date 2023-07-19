@@ -66,13 +66,6 @@ int Tree_Reader(Text_Info * const onegin, tree_s * const my_tree, tree_node ** c
 
 //-------------------------------------------------------------------------------//
 
-/// @brief Function finds out the operation code by it's symbol
-/// @param operation is ptr the operaton symbol
-/// @return code of the operation
-int Tree_Get_Number_By_Operator(char * operation);    
-
-//-------------------------------------------------------------------------------//
-
 /// @brief Function finds out the symbol of the operation by it's code
 /// @param operation is code of the opearation
 /// @return the symbol of the operation
@@ -80,46 +73,10 @@ int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long
 
 //-------------------------------------------------------------------------------//
 
-/// @brief Function gets code of variable by it's symbol
-/// @param variable is symbol of the variable
-/// @return the code of the variable
-int Tree_Get_Number_By_Variable(char * variable);
-
-//-------------------------------------------------------------------------------//
-
 /// @brief Function gets the symbol of the variable by it's code
 /// @param variable is the code of the variable
 /// @return the symbol of the variable
 char Tree_Get_Variable_By_Number(int variable);
-
-//-------------------------------------------------------------------------------//
-
-/// @brief 
-/// @param cur_node 
-/// @param print_type 
-/// @return 
-int Tree_Printer(tree_node * cur_node, const int print_type);
-
-//-------------------------------------------------------------------------------//
-
-/// @brief Function walks tree in the infix order
-/// @param my_tree is ptr on the tree struct
-/// @return 
-int Tree_Print_In_Order(tree_node * const cur_node, FILE * dst_file);
-
-//-------------------------------------------------------------------------------//
-
-/// @brief 
-/// @param cur_node 
-/// @return 
-int Tree_Print_Pre_Order(tree_node * const cur_node, FILE * dst_file);
-
-//-------------------------------------------------------------------------------//
-
-/// @brief 
-/// @param cur_node 
-/// @return 
-int Tree_Print_Post_Order(tree_node * const cur_node, FILE * dst_file);
 
 //-------------------------------------------------------------------------------//
 

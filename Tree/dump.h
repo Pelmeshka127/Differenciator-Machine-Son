@@ -25,14 +25,24 @@ int Tree_Dump(tree_s * const my_tree);
 
 //-------------------------------------------------------------------------------//
 
-/// @brief Function draws nodes of the tree
+/// @brief Function draws nodes of the tree (function is called by Tree_Dump() )
 /// @param root is ptr on the tree node
 void Tree_Draw(tree_node * const node);
 
 //-------------------------------------------------------------------------------//
 
+/// @brief Functions draws tree to the latex file
+/// @param my_tree is ptr on the tree struct
+/// @param png_name is the dst picture name
 void Tree_Dump_To_Tex(tree_s * const my_tree, char * png_name);
 
-void Tree_Dump_Node(tree_node * const node);
+//-------------------------------------------------------------------------------//
+
+/// @brief Function draws separate node of the tree
+/// @param node is ptr on the src node
+/// @return No_Error or File_Error if there's file error
+int Tree_Dump_Node(tree_node * const node);
+
+//-------------------------------------------------------------------------------//
 
 #endif

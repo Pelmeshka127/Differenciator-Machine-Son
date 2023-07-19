@@ -3,6 +3,7 @@
 
 #include "../Tree/tree.h"
 #include "../Architecture/dsl.h"
+#include "../Tree/dump.h"
 
 //-------------------------------------------------------------------------------//
 

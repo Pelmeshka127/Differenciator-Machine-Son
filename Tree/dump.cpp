@@ -53,7 +53,7 @@ int Tree_Dump(tree_s * const my_tree)
     fprintf(graph_file, "digraph Tree\n{\n");
     fprintf(graph_file, "   rankdir = HR;\n");
     fprintf(graph_file, "   node[fontsize=14];\n   edge[color=\"black\",fontcolor=\"blue\",fontsize=12];\n");
-    fprintf(graph_file, "   tree[shape = Mrecord, style = filled, filcolor = \"red\", "
+    fprintf(graph_file, "   tree[shape = Mrecord, style = filled, fillcolor = \"darkolivegreen2\", "
                         "label = \"My Tree | size = %d\"];\n", my_tree->size);
     Tree_Draw(my_tree->root);
     fprintf(graph_file, "   tree -> \"%p\" [color = \"red\"];\n", my_tree->root);
@@ -121,3 +121,41 @@ void Tree_Dump_To_Tex(tree_s * const my_tree, char * png_name)
 
     sprintf(png_name, "graphics/graph%d.png", graph_num - 1);
 }
+
+//-------------------------------------------------------------------------------//
+
+int Tree_Dump_Node(tree_node * const node)
+{
+    graph_file = fopen("graphics/graph.dot", "w");
+    if (graph_file == nullptr)
+    {
+        fprintf(stderr, "Failed openning graph.dot in function %s\n", __PRETTY_FUNCTION__);
+        return File_Error;
+    }
+
+    fprintf(graph_file, "digraph Tree\n{\n");
+    fprintf(graph_file, "   rankdir = HR;\n");
+    fprintf(graph_file, "   node[fontsize=14];\n   edge[color=\"black\",fontcolor=\"blue\",fontsize=12];\n");
+
+    Tree_Draw(node);
+    fprintf(graph_file, "}");
+
+    if (fclose(graph_file) == EOF)
+    {
+        fprintf(stderr, "Failed closing graph.dot in function %s\n", __PRETTY_FUNCTION__);
+        return File_Error;
+    }
+
+    char call_graph[100] = " ";
+
+    sprintf(call_graph, "dot graphics/graph.dot -Tpng -o graphics/graph_node%d.png", graph_num++);
+    
+    system(call_graph);
+
+    fprintf(log_file, "<pre>\n");
+    fprintf(log_file, "\n<image src = \"gpaph_node%d.png\" /image>\n\n\n", graph_num - 1);
+
+    return No_Error;
+}
+
+//-------------------------------------------------------------------------------//
