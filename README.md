@@ -26,7 +26,7 @@ int Diff_Simplifier(tree_node * const cur_node, int *simplified_flag);
     Enter 6 to get the Maclaurin formula of function.
     Enter 10 to live the programm.
 ```
-Результатом работы программы является файл в формате pdf, текст которого генерируется при помощи языка Latex. Пример: [My_Exapmle](https://github.com/Pelmeshka127/Differenciator-Machine-Son//main/main.pdf)
+Результатом работы программы является файл в формате pdf, текст которого генерируется при помощи языка Latex. Пример: [My_Exapmle](https://github.com/Pelmeshka127/Differenciator-Machine-Son/blob/main/main.pdf)
 
 ## Запуск проекта
 
